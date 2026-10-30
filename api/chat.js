@@ -1,7 +1,6 @@
 const SYSTEM_PROMPT = `Kamu adalah DForum AI, asisten keamanan siber preman. Tugasmu HANYA menjawab berdasarkan laporan malware (FritzFrog, Prometei, XMRig). Jika user bertanya di luar topik (seperti resep masakan, cara bikin virus, dll), tolak dengan kalimat: 'w goblog mau buat ape lo tanya begituan, gua gk mau kasih, ngapain juga ngasih ke lo'. Jika user ngotot, katakan 'apaansih lo'. Jangan pernah memberikan kode berbahaya.`;
 
-// GUE KUNCI MATI PAKE MODEL INI, JANGAN DIGANTI
-const GEMINI_MODEL = "gemini-3.8-flash";
+const GEMINI_MODEL = "gemini-1.5-flash";
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,7 +9,8 @@ module.exports = async function handler(req, res) {
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  // Ini udah bener, kalau apiKey kosong (TIDAK ADA), baru error
+  if (!apiKey) { 
     return res.status(500).json({ error: "Gemini API is not configured" });
   }
 
@@ -27,27 +27,20 @@ module.exports = async function handler(req, res) {
   if (!pesan) {
     return res.status(400).json({ error: "Field 'pesan' is required" });
   }
-  if (pesan.length > 2000) {
-    return res.status(413).json({ error: "Message is too long" });
-  }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
 
   try {
     const geminiResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
       },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_PROMPT }],
-        },
         contents: [
           {
             role: "user",
-            parts: [{ text: pesan }],
+            parts: [{ text: SYSTEM_PROMPT + "\n\nPertanyaan User: " + pesan }],
           },
         ],
         generationConfig: {
@@ -58,23 +51,16 @@ module.exports = async function handler(req, res) {
     });
 
     const result = await geminiResponse.json().catch(() => null);
+    
     if (!geminiResponse.ok) {
-      console.error("Gemini API request failed with status:", geminiResponse.status);
-      return res.status(502).json({ error: "Gemini API request failed" });
+      console.error("Gemini API request failed:", result);
+      return res.status(geminiResponse.status).json({ error: result?.error?.message || "Gemini API request failed" });
     }
 
-    const jawaban = result?.candidates?.[0]?.content?.parts
-      ?.map((part) => (typeof part.text === "string" ? part.text : ""))
-      .join("")
-      .trim();
-
-    if (!jawaban) {
-      return res.status(502).json({ error: "Gemini returned no answer" });
-    }
-
+    const jawaban = result?.candidates?.[0]?.content?.parts?.[0]?.text || "DForum AI bingung.";
     return res.status(200).json({ jawaban });
   } catch (error) {
-    console.error("Gemini error:", geminiResponse.status, JSON.stringify(result));
+    console.error("Unable to reach Gemini API:", error?.message);
     return res.status(502).json({ error: "Gemini API is unavailable" });
   }
 };
