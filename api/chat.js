@@ -24,8 +24,8 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Field 'pesan' is required" });
   }
 
-  // PAKAI MODEL INI, JANGAN DIGANTI-GANTI LAGI
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // GUNAKAN URL API v1 (STABIL) DAN MODEL INI
+  const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   try {
     const geminiResponse = await fetch(endpoint, {
@@ -34,13 +34,10 @@ module.exports = async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_PROMPT }],
-        },
         contents: [
           {
             role: "user",
-            parts: [{ text: pesan }],
+            parts: [{ text: SYSTEM_PROMPT + "\n\nPertanyaan User: " + pesan }],
           },
         ],
         generationConfig: {
