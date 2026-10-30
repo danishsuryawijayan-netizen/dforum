@@ -21,59 +21,6 @@
       <p class="terminal-log">EVENT LOGGED <span aria-hidden="true">▪</span> CONNECTION CLOSED</p>
       <a class="terminal-exit" href="../index.html">← KEMBALI KE BERANDA</a>
     </main>
-    <div class="chat-widget" data-chat-widget>
-      <section class="chat-panel" data-chat-panel aria-labelledby="chat-title-admin" hidden>
-        <header class="chat-header">
-          <h2 id="chat-title-admin">Tanya DForum AI</h2>
-          <button
-            class="chat-close"
-            type="button"
-            data-chat-close
-            aria-label="Tutup chat"
-          >×</button>
-        </header>
-        <div
-          class="chat-messages"
-          data-chat-messages
-          role="log"
-          aria-live="polite"
-          aria-relevant="additions text"
-        ></div>
-        <form class="chat-form" data-chat-form>
-          <label class="visually-hidden" for="chat-input-admin">Pesan untuk DForum AI</label>
-          <input
-            id="chat-input-admin"
-            type="text"
-            data-chat-input
-            maxlength="500"
-            autocomplete="off"
-            placeholder="Tulis pertanyaan..."
-          />
-          <button type="submit" data-chat-send>Kirim</button>
-        </form>
-      </section>
-      <button
-        class="chat-launcher"
-        type="button"
-        data-chat-toggle
-        aria-label="Buka chat Tanya DForum AI"
-        aria-expanded="false"
-        title="Tanya DForum AI"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="4" y="6.5" width="16" height="14" rx="3" />
-          <path d="M12 3v3.5M8.5 12h.01M15.5 12h.01M9 16h6" />
-        </svg>
-      </button>
-    </div>
     <script src="../script.js"></script>
     <script>
       window.triggerTrap?.("Fake Admin");

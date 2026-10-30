@@ -226,168 +226,216 @@ window.addEventListener("resize", () => {
   }, 150);
 });
 
-const kataTerlarang = [
-  "cara nyebar",
-  "cara bikin",
-  "source code",
-  "script",
-  "hack",
-  "membuat virus",
-];
-const pelanggaranStorageKey = "dforumPelanggaran";
-let pelanggaran = 0;
 
-try {
-  pelanggaran = Number(window.localStorage.getItem(pelanggaranStorageKey)) || 0;
-} catch {
-  // Chat remains usable for this page view if browser storage is unavailable.
-}
 
-function isChatBlocked() {
-  try {
-    return window.localStorage.getItem("dforumBlocked") === "true";
-  } catch {
-    return false;
-  }
-}
-
-function saveViolationCount() {
-  try {
-    window.localStorage.setItem(pelanggaranStorageKey, String(pelanggaran));
-  } catch {
-    // Keep the in-memory count when browser storage is unavailable.
-  }
-}
-
-function blockChatPermanently() {
-  try {
-    window.localStorage.setItem("dforumBlocked", "true");
-  } catch {
-    // The current page still blocks chat even if storage is unavailable.
-  }
-}
-
-document.querySelectorAll("[data-chat-widget]").forEach((widget) => {
-  const panel = widget.querySelector("[data-chat-panel]");
-  const toggle = widget.querySelector("[data-chat-toggle]");
-  const closeButton = widget.querySelector("[data-chat-close]");
-  const messages = widget.querySelector("[data-chat-messages]");
-  const form = widget.querySelector("[data-chat-form]");
-  const input = widget.querySelector("[data-chat-input]");
-  const sendButton = widget.querySelector("[data-chat-send]");
-
-  if (!panel || !toggle || !messages || !form || !input || !sendButton) {
-    return;
-  }
-
-  const appendMessage = (text, type) => {
-    const message = document.createElement("p");
-    message.className = `chat-message chat-message--${type}`;
-    message.textContent = text;
-    messages.append(message);
-    messages.scrollTop = messages.scrollHeight;
-    return message;
-  };
-
-  const setChatOpen = (isOpen) => {
-    panel.hidden = !isOpen;
-    toggle.setAttribute("aria-expanded", String(isOpen));
-    toggle.setAttribute("aria-label", isOpen ? "Tutup chat Tanya DForum AI" : "Buka chat Tanya DForum AI");
-    if (isOpen && !input.disabled) {
-      input.focus();
-    }
-  };
-
-  const blockedAtLoad = isChatBlocked();
-  if (blockedAtLoad) {
-    input.disabled = true;
-    sendButton.disabled = true;
-    appendMessage("Lo udah gue blokir, bego! Gabisa nanya lagi.", "bot");
-  } else {
-    appendMessage("Yo. Tanya soal ancaman malware. Jangan minta resep bikin virus.", "bot");
-  }
-
-  toggle.addEventListener("click", () => setChatOpen(panel.hidden));
-  closeButton?.addEventListener("click", () => {
-    setChatOpen(false);
-    toggle.focus();
+// Defang indicators in place so domains and IPs are readable but not clickable.
+document.querySelectorAll(".ioc-list .ioc-item dd").forEach((valueNode) => {
+  valueNode.querySelectorAll("a").forEach((link) => {
+    link.replaceWith(document.createTextNode(link.textContent || ""));
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !panel.hidden) {
-      setChatOpen(false);
-      toggle.focus();
-    }
-  });
-
-  async function kirimPesanChat(event) {
-    event.preventDefault();
-    if (isChatBlocked() || input.disabled) {
-      input.disabled = true;
-      sendButton.disabled = true;
-      return;
-    }
-
-    const userText = input.value.trim();
-    if (!userText) {
-      input.focus();
-      return;
-    }
-
-    appendMessage(userText, "user");
-    input.value = "";
-
-    const normalizedText = userText.toLowerCase();
-    if (kataTerlarang.some((word) => normalizedText.includes(word))) {
-      pelanggaran += 1;
-      saveViolationCount();
-
-      if (pelanggaran >= 2) {
-        blockChatPermanently();
-        appendMessage("apaansih lo, gue blokir aja lo daripada ngerisuhin", "bot");
-        input.disabled = true;
-        sendButton.disabled = true;
-      } else {
-        appendMessage(
-          "w goblog mau buat ape lo tanya begituan, gua gk mau kasih, ngapain juga ngasih ke lo",
-          "bot",
-        );
-      }
-      return;
-    }
-
-    input.disabled = true;
-    sendButton.disabled = true;
-    const loadingMessage = appendMessage("DForum AI sedang mengetik...", "typing");
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pesan: userText }),
-      });
-      const result = await response.json();
-
-      if (!response.ok || typeof result.jawaban !== "string" || !result.jawaban.trim()) {
-        throw new Error("Chat API request failed");
-      }
-
-      loadingMessage.remove();
-      appendMessage(result.jawaban.trim(), "bot");
-    } catch {
-      loadingMessage.remove();
-      appendMessage(
-        "DForum AI lagi nggak bisa dihubungi. Coba lagi sebentar, atau baca laporannya di atas.",
-        "bot",
-      );
-    } finally {
-      if (!isChatBlocked()) {
-        input.disabled = false;
-        sendButton.disabled = false;
-        input.focus();
-      }
-    }
+  const walker = document.createTreeWalker(valueNode, NodeFilter.SHOW_TEXT);
+  let textNode;
+  while ((textNode = walker.nextNode())) {
+    textNode.nodeValue = textNode.nodeValue
+      .replace(/https?:\/\//gi, (protocol) => protocol.replace(/^http/i, "hxxp"))
+      .replace(/(^|[\w])\.(?=[\w])/g, "$1[.]");
   }
-
-  form.addEventListener("submit", kirimPesanChat);
 });
+
+// Filter all homepage report cards, including news cards added after fetch.
+const articleSearch = document.querySelector("#article-search");
+const articleGrid = document.querySelector("#article-grid");
+const searchStatus = document.querySelector("#search-status");
+
+function filterArticleCards() {
+  if (!articleSearch || !articleGrid) return;
+
+  const query = articleSearch.value.trim().toLocaleLowerCase("id-ID");
+  const articleCards = Array.from(articleGrid.querySelectorAll(".article-card"));
+  let visibleCount = 0;
+
+  articleCards.forEach((card) => {
+    const matches = card.textContent.toLocaleLowerCase("id-ID").includes(query);
+    card.classList.toggle("is-search-hidden", !matches);
+    if (matches) visibleCount += 1;
+  });
+
+  const emptyMessage = articleGrid.querySelector(".news-empty");
+  if (emptyMessage) emptyMessage.hidden = Boolean(query);
+  if (searchStatus) {
+    searchStatus.textContent = query
+      ? `${visibleCount} laporan cocok.`
+      : `${visibleCount} laporan tersedia.`;
+  }
+}
+
+if (articleSearch && articleGrid) {
+  articleSearch.addEventListener("input", filterArticleCards);
+  filterArticleCards();
+}
+
+// One counted visit per browser tab session. Later page loads read the same total.
+const visitorCounter = document.querySelector("[data-visitor-counter]");
+const visitorCount = document.querySelector("[data-visitor-count]");
+const visitorCounterEndpoint = "https://counterapi.com/api/dforum-malware-portfolio/view/total-visitors";
+const visitorSessionKey = "dforum-visitor-counted";
+
+if (visitorCounter && visitorCount) {
+  let countedThisSession = false;
+  try {
+    countedThisSession = window.sessionStorage.getItem(visitorSessionKey) === "1";
+  } catch {
+    // The remote counter still works if this browser disables session storage.
+  }
+
+  const counterUrl = countedThisSession
+    ? `${visitorCounterEndpoint}?readOnly=true`
+    : visitorCounterEndpoint;
+
+  fetch(counterUrl, { cache: "no-store" })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Counter API returned ${response.status}`);
+      return response.json();
+    })
+    .then((data) => {
+      const total = Number(data.value);
+      if (!Number.isFinite(total)) throw new Error("Counter API returned an invalid value");
+      visitorCount.textContent = new Intl.NumberFormat("id-ID").format(total);
+      if (!countedThisSession) {
+        try {
+          window.sessionStorage.setItem(visitorSessionKey, "1");
+        } catch {
+          // Counting remains available for this page view without session storage.
+        }
+      }
+    })
+    .catch((error) => {
+      visitorCount.textContent = "—";
+      visitorCounter.setAttribute("aria-label", "Jumlah pengunjung belum tersedia");
+      console.warn("Counter pengunjung tidak dapat dimuat.", error);
+    });
+}
+
+// Tambahkan watermark pada teks yang disalin dari halaman.
+document.addEventListener("copy", function (e) {
+  const teksDipilih = window.getSelection().toString();
+  if (!teksDipilih) return;
+
+  const watermark = "\n\n©dforum - Koran Siber: Nggak Ada Waktu Buat Basa-Basi\nSumber: https://dforum.is-a.dev";
+  const teksBaru = teksDipilih + watermark;
+  e.clipboardData.setData("text/plain", teksBaru);
+  e.preventDefault();
+});
+
+
+// Build safe, styled news cards from the editable root berita.json file.
+function buatKartuBerita(berita) {
+  if (!berita || typeof berita !== "object") return null;
+  const judul = typeof berita.judul === "string" ? berita.judul.trim() : "";
+  const tanggal = typeof berita.tanggal === "string" ? berita.tanggal.trim() : "";
+  const kategori = typeof berita.kategori === "string" ? berita.kategori.trim() : "BERITA";
+  const link = typeof berita.link === "string" ? berita.link.trim() : "";
+  const sumber = typeof berita.sumber === "string" ? berita.sumber.trim() : "";
+  const linkSumber = typeof berita.link_sumber === "string" ? berita.link_sumber.trim() : "";
+  if (!judul || !tanggal || !link || /^[a-z][a-z\d+.-]*:/i.test(link) || link.startsWith("//")) return null;
+
+  const baseUrl = new URL("./", document.baseURI);
+  const tujuan = new URL(link, baseUrl);
+  const pathBerita = new URL("berita/", baseUrl).pathname;
+  if (tujuan.origin !== baseUrl.origin || !tujuan.pathname.startsWith(pathBerita)) return null;
+
+  const card = document.createElement("article");
+  card.className = "article-card berita-card";
+
+  const topline = document.createElement("div");
+  topline.className = "card-topline";
+  const index = document.createElement("span");
+  index.className = "card-index";
+  index.textContent = "KABAR SIBER";
+  topline.append(index);
+
+  const labelKategori = document.createElement("p");
+  labelKategori.className = "card-category";
+  labelKategori.textContent = kategori || "BERITA";
+
+  const heading = document.createElement("h2");
+  const titleLink = document.createElement("a");
+  titleLink.className = "news-title-link";
+  titleLink.href = tujuan.href;
+  titleLink.textContent = judul;
+  heading.append(titleLink);
+
+  const date = document.createElement("p");
+  date.className = "card-description berita-date";
+  date.textContent = tanggal;
+
+  const sourceLine = document.createElement("p");
+  sourceLine.className = "berita-source";
+  sourceLine.append(document.createTextNode("Sumber: "));
+  if (sumber && linkSumber) {
+    try {
+      const sourceUrl = new URL(linkSumber);
+      if (sourceUrl.protocol !== "https:" && sourceUrl.protocol !== "http:") {
+        throw new Error("URL sumber harus menggunakan HTTP atau HTTPS");
+      }
+      const sourceLink = document.createElement("a");
+      sourceLink.className = "source-link";
+      sourceLink.href = sourceUrl.href;
+      sourceLink.target = "_blank";
+      sourceLink.rel = "noopener noreferrer";
+      sourceLink.textContent = sumber;
+      sourceLine.append(sourceLink);
+    } catch {
+      sourceLine.append(document.createTextNode(sumber));
+    }
+  } else {
+    sourceLine.append(document.createTextNode(sumber || "Tidak dicantumkan"));
+  }
+
+  const action = document.createElement("a");
+  action.className = "card-action";
+  action.href = tujuan.href;
+  action.append(document.createTextNode("BACA BERITA "));
+  const arrow = document.createElement("span");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "→";
+  action.append(arrow);
+
+  card.append(topline, labelKategori, heading, date, sourceLine, action);
+  return card;
+}
+
+function tampilkanPesanBerita(container, pesan) {
+  const message = document.createElement("p");
+  message.className = "news-empty";
+  message.setAttribute("role", "status");
+  message.textContent = pesan;
+  container.replaceChildren(message);
+}
+
+async function ambilDataBerita() {
+  const container = document.querySelector("#daftar-berita");
+  if (!container) return;
+
+  try {
+    const response = await fetch("berita.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error(`berita.json returned ${response.status}`);
+    const dataBerita = await response.json();
+    if (!Array.isArray(dataBerita)) throw new Error("berita.json harus berisi array");
+
+    const cards = dataBerita.map(buatKartuBerita).filter(Boolean);
+    if (cards.length) {
+      container.replaceChildren(...cards);
+    } else {
+      tampilkanPesanBerita(container, "Belum ada update berita siber hari ini. Balik lagi nanti.");
+    }
+    filterArticleCards();
+  } catch (error) {
+    tampilkanPesanBerita(container, "Belum ada update berita siber hari ini. Balik lagi nanti.");
+    filterArticleCards();
+    console.warn("Berita siber gagal dimuat.", error);
+  }
+}
+
+ambilDataBerita();
