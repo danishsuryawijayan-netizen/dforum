@@ -74,7 +74,7 @@ module.exports = async function handler(req, res) {
 
     return res.status(200).json({ jawaban });
   } catch (error) {
-    console.error("Unable to reach Gemini API:", error?.message || "Unknown error");
+    console.error("Gemini error:", geminiResponse.status, JSON.stringify(result));
     return res.status(502).json({ error: "Gemini API is unavailable" });
   }
 };
