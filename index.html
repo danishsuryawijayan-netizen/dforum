@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="DFORUM — koran siber untuk bedah malware tanpa basa-basi."
+    />
+    <title>DFORUM — Koran Siber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="masthead">
+        <div class="masthead-topline">
+          <p class="publication-mark">ARSIP ANALISIS MALWARE</p>
+          <div class="masthead-tools">
+            <p class="masthead-credit">©dforum</p>
+            <button
+              class="theme-toggle"
+              type="button"
+              data-theme-toggle
+              aria-label="Aktifkan mode gelap"
+              aria-pressed="false"
+              title="Aktifkan mode gelap"
+            >
+              <span class="theme-icon" aria-hidden="true">☾</span>
+            </button>
+          </div>
+        </div>
+        <h1 class="wordmark">DFORUM</h1>
+        <p class="masthead-subtitle">Koran Siber: Nggak Ada Waktu Buat Basa-Basi</p>
+      </header>
+
+      <aside class="warning-banner" aria-label="Peringatan keamanan">
+        <span class="warning-label">PERINGATAN</span>
+        <p>AWAS! Web ini isinya bedah virus. Jangan bego nyoba di komputer asli lo!</p>
+      </aside>
+
+      <nav class="main-nav" aria-label="Kategori artikel">
+        <a class="nav-link nav-link--current" href="#artikel">SEMUA</a>
+        <a class="nav-link" href="#fritzfrog">WORM &amp; BOTNET</a>
+        <a class="nav-link" href="#xmrig">CRYPTOMINER</a>
+        <a class="nav-link" href="#prometei">APT &amp; BACKDOOR</a>
+        <a class="nav-link" href="#berita">BERITA</a>
+      </nav>
+
+      <main id="artikel">
+        <div class="section-heading">
+          <p class="section-kicker">ISI MEJA REDAKSI</p>
+          <p class="section-note">Baca polanya. Jangan asal main.</p>
+        </div>
+
+        <section class="article-grid" aria-label="Daftar artikel">
+          <a class="article-card" id="fritzfrog" href="artikel/fritzfrog.html">
+            <div class="card-topline">
+              <span class="card-index">DOSSIER 001</span>
+              <span class="threat-badge threat-badge--critical">CRITICAL</span>
+            </div>
+            <p class="card-category">WORM &amp; BOTNET</p>
+            <h2>FritzFrog</h2>
+            <p class="card-description">Bedah cara kerjanya. Pahami ancamannya sebelum sok coba-coba.</p>
+            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a class="article-card" id="xmrig" href="artikel/xmrig.html">
+            <div class="card-topline">
+              <span class="card-index">DOSSIER 002</span>
+              <span class="threat-badge threat-badge--high">HIGH</span>
+            </div>
+            <p class="card-category">CRYPTOMINER</p>
+            <h2>XMRig</h2>
+            <p class="card-description">Kenali penambang kripto yang bisa numpang tenaga mesin.</p>
+            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a class="article-card" id="prometei" href="artikel/prometei.html">
+            <div class="card-topline">
+              <span class="card-index">DOSSIER 003</span>
+              <span class="threat-badge threat-badge--critical">CRITICAL</span>
+            </div>
+            <p class="card-category">APT &amp; BACKDOOR</p>
+            <h2>Prometei</h2>
+            <p class="card-description">Telusuri jejak backdoor. Detail kecil bisa jadi alarm besar.</p>
+            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+          </a>
+
+          <article class="article-card article-card--placeholder" id="berita">
+            <div class="card-topline">
+              <span class="card-index">MEJA BERITA</span>
+              <span class="placeholder-mark" aria-hidden="true">—</span>
+            </div>
+            <p class="card-category">BERITA</p>
+            <h2>Berita Siber Terkini</h2>
+            <p class="card-description">Ruang ini menunggu kabar yang layak dibedah. Tetap waspada.</p>
+            <span class="card-action card-action--muted">SEGERA HADIR</span>
+          </article>
+        </section>
+      </main>
+
+      <form id="honeypot-form" class="honeypot" aria-hidden="true" autocomplete="off">
+        <label for="hp-email">Email</label>
+        <input id="hp-email" type="text" name="email" tabindex="-1" autocomplete="off" />
+        <button type="submit" tabindex="-1">Kirim</button>
+      </form>
+
+      <footer class="site-footer">
+        <p>©dforum - Independent Malware Researcher</p>
+      </footer>
+    </div>
+    <button
+      class="back-to-top"
+      type="button"
+      data-back-to-top
+      aria-label="Kembali ke atas"
+      title="Kembali ke atas"
+    >
+      <span aria-hidden="true">↑</span>
+    </button>
+    <div class="chat-widget" data-chat-widget>
+      <section class="chat-panel" data-chat-panel aria-labelledby="chat-title-home" hidden>
+        <header class="chat-header">
+          <h2 id="chat-title-home">Tanya DForum AI</h2>
+          <button
+            class="chat-close"
+            type="button"
+            data-chat-close
+            aria-label="Tutup chat"
+          >×</button>
+        </header>
+        <div
+          class="chat-messages"
+          data-chat-messages
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+        <form class="chat-form" data-chat-form>
+          <label class="visually-hidden" for="chat-input-home">Pesan untuk DForum AI</label>
+          <input
+            id="chat-input-home"
+            type="text"
+            data-chat-input
+            maxlength="500"
+            autocomplete="off"
+            placeholder="Tulis pertanyaan..."
+          />
+          <button type="submit" data-chat-send>Kirim</button>
+        </form>
+      </section>
+      <button
+        class="chat-launcher"
+        type="button"
+        data-chat-toggle
+        aria-label="Buka chat Tanya DForum AI"
+        aria-expanded="false"
+        title="Tanya DForum AI"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="4" y="6.5" width="16" height="14" rx="3" />
+          <path d="M12 3v3.5M8.5 12h.01M15.5 12h.01M9 16h6" />
+        </svg>
+      </button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

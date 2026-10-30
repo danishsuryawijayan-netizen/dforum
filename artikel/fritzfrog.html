@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Bedah FritzFrog: worm P2P Golang yang menyerang server lewat SSH."
+    />
+    <title>FritzFrog — DFORUM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="page-shell article-shell">
+      <header class="article-header">
+        <div class="article-utility">
+          <p>©dforum</p>
+          <button
+            class="theme-toggle"
+            type="button"
+            data-theme-toggle
+            aria-label="Aktifkan mode gelap"
+            aria-pressed="false"
+            title="Aktifkan mode gelap"
+          >
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+        </div>
+        <a class="back-link" href="../index.html">← KEMBALI KE BERANDA</a>
+        <p class="article-kicker">DOSSIER MALWARE / LAPORAN LAPANGAN</p>
+        <h1>FritzFrog: Cacing Bersenjata Golang yang Mengintai via SSH</h1>
+        <p class="article-meta">
+          Tanggal: 28 Oktober 2026 <span aria-hidden="true">|</span> Kategori: WORM &amp; BOTNET
+          <span aria-hidden="true">|</span> Status: CRITICAL
+        </p>
+      </header>
+
+      <main>
+        <article class="article-body">
+          <p class="article-lead">Gini bro, FritzFrog ini bukan virus sembarangan. Dia tuh cacing P2P yang nyebar lewat SSH. Baca baik-baik laporannya biar otak lo nggak jadi sarang virus.</p>
+
+          <h2>Apaan Sih Ini?</h2>
+          <p>
+            FritzFrog adalah worm sekaligus botnet peer-to-peer (P2P) yang ditulis dalam Go, alias Golang.
+            Tiap mesin yang kebobolan bisa jadi bagian jaringan dan ikut meneruskan aktivitasnya. Malware ini
+            dapat berjalan di memori, jadi jangan berharap selalu ada berkas mencurigakan yang gampang ditemukan
+            di disk. Ringkasnya: satu server lengah bisa jadi batu loncatan buat server lain.
+          </p>
+
+          <h2>Kenapa Ini Bahaya Banget?</h2>
+          <h3>SSH lemah dibabat, akses belakang ditinggal</h3>
+          <p>
+            FritzFrog memburu server yang membuka SSH lalu mencoba banyak kombinasi kredensial. Password bawaan,
+            password pendek, atau password yang dipakai ulang bikin pintu makin gampang didobrak. Karena serangan
+            dibagi antar-peer, percobaannya bisa datang dari banyak mesin dalam jaringan botnet.
+          </p>
+          <p>
+            Nama akun <code>node</code> boleh lo audit kalau muncul tanpa alasan jelas, tapi jangan langsung cap itu
+            sebagai bukti FritzFrog. Riset yang dirujuk di bawah mendokumentasikan pintu belakang berupa kunci
+            publik SSH asing yang ditambahkan ke <code>authorized_keys</code>. Kunci itu dapat memberi akses lagi
+            tanpa password. Periksa akun dan kunci secara teliti; jangan asal hapus akun layanan yang memang sah.
+          </p>
+          <p>
+            Ada tanda lain yang patut diselidiki: proses bernama <code>ifconfig</code>, <code>nginx</code>, atau
+            <code>libexec</code> yang berjalan tanpa berkas executable di disk, serta layanan tak dikenal yang
+            mendengarkan di TCP port 1234. Satu tanda saja belum cukup buat vonis—cocokkan dengan log dan kondisi
+            mesin.
+          </p>
+
+          <h2>Gimana Cara Nangkisnya?</h2>
+          <p>Rapikan pintu masuknya dulu. Kerjakan yang dasar ini dengan disiplin:</p>
+          <ul>
+            <li>Ganti password bawaan dan password yang dipakai ulang dengan kredensial kuat dan unik.</li>
+            <li>Utamakan autentikasi SSH berbasis kunci yang dikelola baik; batasi akses SSH hanya dari alamat atau jaringan yang berwenang.</li>
+            <li>Matikan SSH yang tidak dipakai, nonaktifkan login root jarak jauh, dan pasang pembaruan keamanan secepatnya.</li>
+            <li>Audit akun, <code>authorized_keys</code>, log autentikasi, proses tanpa berkas, dan port yang mendengarkan.</li>
+            <li>Aktifkan MFA atau kebijakan penguncian akun bila tersedia, lalu pisahkan jaringan supaya satu mesin jebol tidak bebas merambat.</li>
+          </ul>
+          <p>
+            Kalau ada tanda kompromi, isolasi host dari jaringan dan minta tim keamanan memeriksa bukti sebelum
+            membersihkan sistem. FritzFrog berkembang; indikator lama bisa basi. Jangan jadikan satu alamat IP atau
+            satu nama proses sebagai satu-satunya patokan.
+          </p>
+        </article>
+
+        <section class="ioc-panel" aria-labelledby="ioc-title">
+          <div class="ioc-heading-row">
+            <h2 id="ioc-title">INDIKATORS OF COMPROMISE (IoC)</h2>
+            <button
+              class="copy-button"
+              type="button"
+              data-copy-ioc
+              aria-label="Salin semua indikator ke clipboard"
+            >
+              COPY
+            </button>
+          </div>
+          <dl class="ioc-list">
+            <div class="ioc-item">
+              <dt>IP contoh</dt>
+              <dd><code>192.0.2.10</code><span class="ioc-qualifier">Alamat dokumentasi; bukan IP FritzFrog aktif.</span></dd>
+            </div>
+            <div class="ioc-item">
+              <dt>SHA-256 · FritzFrog AMD · Akamai 2024</dt>
+              <dd><code>f77ab04ee56f3cd4845d4a80c5817a7de4f0561d976d87563deab752363a765d</code></dd>
+            </div>
+            <div class="ioc-item">
+              <dt>SHA-256 · FritzFrog ARM · Akamai 2024</dt>
+              <dd><code>fb3371dd45585763f1436afb7d64c202864d89ee6cbb743efac9dbf1cefcc291</code></dd>
+            </div>
+            <div class="ioc-item">
+              <dt>Nama akun untuk diaudit</dt>
+              <dd><code>node</code><span class="ioc-qualifier">Contoh pemeriksaan lokal; bukan indikator keluarga yang terverifikasi.</span></dd>
+            </div>
+            <div class="ioc-item">
+              <dt>Petunjuk jaringan</dt>
+              <dd><code>TCP 1234</code><span class="ioc-qualifier">Komunikasi P2P yang dilaporkan; periksa bersama bukti lain.</span></dd>
+            </div>
+          </dl>
+          <p class="ioc-footnote">
+            Hash di atas berasal dari laporan Akamai tahun 2024. IoC dapat berubah atau kedaluwarsa; validasi dulu
+            terhadap sumber riset dan telemetry lingkungan lo. Alamat IP contoh sengaja memakai rentang dokumentasi.
+          </p>
+        </section>
+
+        <section class="article-sources" aria-labelledby="sources-title">
+          <h2 id="sources-title">RUJUKAN LAPANGAN</h2>
+          <ul>
+            <li><a href="https://www.akamai.com/blog/security/fritzfrog-a-new-generation-of-peer-to-peer-botnets" target="_blank" rel="noreferrer">Akamai / Guardicore Labs — analisis FritzFrog dan backdoor SSH</a></li>
+            <li><a href="https://www.akamai.com/blog/security-research/2024/feb/fritzfrog-botnet-new-capabilities-log4shell" target="_blank" rel="noreferrer">Akamai — varian FritzFrog dan hash sampel, 2024</a></li>
+            <li><a href="https://digital.nhs.uk/cyber-alerts/2020/cc-3602" target="_blank" rel="noreferrer">NHS England Digital — ringkasan, mitigasi, dan hash host</a></li>
+          </ul>
+        </section>
+
+        <aside class="article-disclaimer">
+          <p>DENGERIN, BEGO! Laporan ini cuma buat riset. Gue nggak nyebarin virusnya, dan kalau lo pake ini buat nyerang orang, itu dosa lo sendiri, jangan bawa-bawa nama gue.</p>
+        </aside>
+      </main>
+
+      <form id="honeypot-form" class="honeypot" aria-hidden="true" autocomplete="off">
+        <label for="hp-email">Email</label>
+        <input id="hp-email" type="text" name="email" tabindex="-1" autocomplete="off" />
+        <button type="submit" tabindex="-1">Kirim</button>
+      </form>
+
+      <footer class="site-footer article-footer">
+        <p>©dforum</p>
+      </footer>
+    </div>
+    <button
+      class="back-to-top"
+      type="button"
+      data-back-to-top
+      aria-label="Kembali ke atas"
+      title="Kembali ke atas"
+    >
+      <span aria-hidden="true">↑</span>
+    </button>
+    <div class="chat-widget" data-chat-widget>
+      <section class="chat-panel" data-chat-panel aria-labelledby="chat-title-fritzfrog" hidden>
+        <header class="chat-header">
+          <h2 id="chat-title-fritzfrog">Tanya DForum AI</h2>
+          <button
+            class="chat-close"
+            type="button"
+            data-chat-close
+            aria-label="Tutup chat"
+          >×</button>
+        </header>
+        <div
+          class="chat-messages"
+          data-chat-messages
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+        <form class="chat-form" data-chat-form>
+          <label class="visually-hidden" for="chat-input-fritzfrog">Pesan untuk DForum AI</label>
+          <input
+            id="chat-input-fritzfrog"
+            type="text"
+            data-chat-input
+            maxlength="500"
+            autocomplete="off"
+            placeholder="Tulis pertanyaan..."
+          />
+          <button type="submit" data-chat-send>Kirim</button>
+        </form>
+      </section>
+      <button
+        class="chat-launcher"
+        type="button"
+        data-chat-toggle
+        aria-label="Buka chat Tanya DForum AI"
+        aria-expanded="false"
+        title="Tanya DForum AI"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="4" y="6.5" width="16" height="14" rx="3" />
+          <path d="M12 3v3.5M8.5 12h.01M15.5 12h.01M9 16h6" />
+        </svg>
+      </button>
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>
