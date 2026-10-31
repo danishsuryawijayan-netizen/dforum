@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dforum-nine.vercel.app/sitemap.xml
