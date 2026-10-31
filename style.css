@@ -64,6 +64,10 @@ button { font: inherit; }
 }
 .site-header {
   position: relative;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0 0 clamp(1.3rem, 3vw, 2.4rem);
   border-bottom: 4px solid var(--auburn);
   text-align: center;
@@ -112,13 +116,14 @@ button { font: inherit; }
   outline-offset: 4px;
 }
 .header-brand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 20px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
+  width: max-content;
 }
 .brand-logo {
   width: 90px;
@@ -666,6 +671,8 @@ h1, .article-title {
     .header-brand {
         flex-direction: column;
         gap: 10px;
+        width: 100%;
+        text-align: center;
     }
 
     .brand-logo {
