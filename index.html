@@ -7,6 +7,9 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="description" content="DFORUM — laporan analisis malware dan keamanan siber." />
     <title>DFORUM — Laporan Keamanan Siber</title>
+    <!-- Cloudflare Turnstile Placeholder -->
+    <!-- Nanti jika sudah punya Site Key, buka komentar script di bawah ini -->
+    <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
     <meta name="google-site-verification" content="ZjZ8lPPSImnZbILf-GXH8DastswRt1AA1orF4WH18lg" />
     <link rel="icon" type="image/png" href="assets/img/logo.png">
     <link rel="preload" href="assets/font/chuck_noon/Chuck%20Noon.ttf" as="font" type="font/ttf" crossorigin />
@@ -100,5 +103,16 @@
       }
     </script>
     <script src="script.js?v=4"></script>
+    <!-- Widget Turnstile Placeholder -->
+    <div class="cf-turnstile" data-sitekey="SITE_KEY_ANDA_DI_SINI" data-callback="onTurnstileSuccess" style="display: none;"></div>
+
+    <!-- Script Placeholder Callback -->
+    <script>
+      // Fungsi ini akan dipanggil jika user berhasil lolos verifikasi Cloudflare
+      function onTurnstileSuccess(token) {
+        console.log("Turnstile verification passed. Token:", token);
+        // Logika untuk membuka form atau fitur tertentu bisa ditaruh di sini
+      }
+    </script>
   </body>
 </html>
