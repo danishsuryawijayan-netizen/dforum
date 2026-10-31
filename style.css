@@ -62,7 +62,7 @@ button { font: inherit; }
   margin-inline: auto;
   padding-block: clamp(1.2rem, 3vw, 2.8rem) 1.5rem;
 }
-.masthead {
+.site-header {
   position: relative;
   padding: 0 0 clamp(1.3rem, 3vw, 2.4rem);
   border-bottom: 4px solid var(--auburn);
@@ -111,22 +111,33 @@ button { font: inherit; }
   outline: 3px solid var(--auburn);
   outline-offset: 4px;
 }
-.header-brand {
+.header-layout {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
 }
 .brand-logo {
-  width: 70px;
-  height: auto;
-  border: 2px solid #9E2A2B;
-  padding: 2px;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 22px;
+  box-shadow: 2px 2px 0 #335C67;
 }
-.header-brand h1.site-title {
+.title-container {
+  flex: 2;
+  text-align: center;
+}
+.title-container h1.site-title {
   margin: 0;
-  text-align: left;
 }
 .site-title {
   margin: clamp(1.1rem, 3vw, 2rem) 0 0;
@@ -137,7 +148,7 @@ button { font: inherit; }
   line-height: .88;
 }
 .home-page .site-title { font-size: clamp(3.2rem, 10vw, 7rem) !important; }
-.masthead-subtitle {
+.site-tagline {
   margin: clamp(.8rem, 2vw, 1.4rem) 0 0;
   color: var(--slate);
   font-size: clamp(1rem, 2vw, 1.55rem);
@@ -661,6 +672,25 @@ h1, .article-title {
 }
 
 @media screen and (max-width: 768px) {
+    .header-layout {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .logo-container {
+        justify-content: center;
+    }
+
+    .brand-logo {
+        width: 70px;
+        height: 70px;
+        border-radius: 16px;
+    }
+
+    .home-page .title-container h1.site-title {
+        font-size: 2.5rem !important;
+    }
+
     /* 1. Paksa layout koran jadi 1 kolom lurus */
     .newspaper-layout, .article-layout {
         column-count: 1 !important;
@@ -703,9 +733,6 @@ h1, .article-title {
         margin-right: 5px !important;
     }
 
-    .brand-logo {
-        width: 50px;
-    }
 }
 
 /* Cards for articles generated from berita.json. */
