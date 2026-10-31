@@ -633,30 +633,45 @@ h1, .article-title {
 }
 
 @media screen and (max-width: 768px) {
-    /* 1. Paksa artikel jadi 1 kolom lurus ke bawah */
-    .newspaper-layout {
+    /* 1. Paksa layout koran jadi 1 kolom lurus */
+    .newspaper-layout, .article-layout {
         column-count: 1 !important;
+        column-width: auto !important;
         column-gap: 0 !important;
         column-rule: none !important;
-        text-align: left !important; /* Hilangkan justify agar teks tidak renggang */
+        text-align: left !important; /* Hilangkan justify yang bikin teks renggang */
+        display: block !important;
     }
 
-    /* 2. Kecilin ukuran judul di HP */
+    /* 2. Judul jangan kegedean */
     h1, .article-title {
-        font-size: 2.2rem !important;
+        font-size: 2rem !important;
         line-height: 1.2 !important;
+        text-align: center !important;
     }
 
-    /* 3. Sesuaikan tinggi gambar di HP (jangan 400px) */
+    /* 3. Gambar dipaksa jadi banner kecil (anti gepeng/anti tinggi) */
+    figure {
+        margin: 15px 0 !important;
+        column-span: none !important;
+        width: 100% !important;
+    }
+
     .article-image {
-        height: 250px !important;
-        max-height: 250px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 200px !important; /* Kunci tinggi 200px */
+        max-height: 200px !important;
         object-fit: cover !important;
+        display: block !important;
+        margin: 0 auto 10px auto !important;
     }
 
-    /* 4. Kecilin Drop Cap di HP */
+    /* 4. Drop Cap jangan kegedean */
     .drop-cap::first-letter {
-        font-size: 3.5rem !important;
-        line-height: 0.9 !important;
+        font-size: 3rem !important;
+        float: left !important;
+        line-height: 1 !important;
+        margin-right: 5px !important;
     }
 }
