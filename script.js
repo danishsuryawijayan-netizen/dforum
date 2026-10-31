@@ -303,48 +303,6 @@ if (articleSearch) {
 }
 filterArticleCards();
 
-// One counted visit per browser tab session. Later page loads read the same total.
-const visitorCounter = document.querySelector("[data-visitor-counter]");
-const visitorCount = document.querySelector("[data-visitor-count]");
-const visitorCounterEndpoint = "https://counterapi.com/api/dforum-malware-portfolio/view/total-visitors";
-const visitorSessionKey = "dforum-visitor-counted";
-
-if (visitorCounter && visitorCount) {
-  let countedThisSession = false;
-  try {
-    countedThisSession = window.sessionStorage.getItem(visitorSessionKey) === "1";
-  } catch {
-    // The remote counter still works if this browser disables session storage.
-  }
-
-  const counterUrl = countedThisSession
-    ? `${visitorCounterEndpoint}?readOnly=true`
-    : visitorCounterEndpoint;
-
-  fetch(counterUrl, { cache: "no-store" })
-    .then((response) => {
-      if (!response.ok) throw new Error(`Counter API returned ${response.status}`);
-      return response.json();
-    })
-    .then((data) => {
-      const total = Number(data.value);
-      if (!Number.isFinite(total)) throw new Error("Counter API returned an invalid value");
-      visitorCount.textContent = new Intl.NumberFormat("id-ID").format(total);
-      if (!countedThisSession) {
-        try {
-          window.sessionStorage.setItem(visitorSessionKey, "1");
-        } catch {
-          // Counting remains available for this page view without session storage.
-        }
-      }
-    })
-    .catch((error) => {
-      visitorCount.textContent = "—";
-      visitorCounter.setAttribute("aria-label", "Jumlah pengunjung belum tersedia");
-      console.warn("Counter pengunjung tidak dapat dimuat.", error);
-    });
-}
-
 // Tambahkan watermark pada teks yang disalin dari halaman.
 document.addEventListener("copy", function (e) {
   const teksDipilih = window.getSelection().toString();
