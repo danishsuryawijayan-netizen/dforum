@@ -120,6 +120,7 @@ button { font: inherit; }
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  margin-left: -40px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -673,6 +674,7 @@ h1, .article-title {
         gap: 10px;
         width: 100%;
         text-align: center;
+        margin-left: 0;
     }
 
     .brand-logo {
