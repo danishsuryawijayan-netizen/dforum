@@ -4,8 +4,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta content='YOGYAKARTA — Ini bukan virus sembarangan. Namanya FritzFrog, sebuah Worm (cacing) mutakhir yang ditulis pake bahasa Golang (Go). Bedanya sama virus lain, dia nyebar mandiri lewat jaringan pake protokol P2P (Peer-to-Peer) dan nekat nge-Brute-Force layanan SSH. Tanggal 28 Oktober, kami narik sampel file .elf berukuran 16.6 MB dari MalwareBazaar. Dia nggak cuma nambang kripto (CoinMiner), tapi punya misi bikin "pintu belakang" (Backdoor) dengan nambahin user baru di sistem yang kena infeksi.' name="description"/>
-<title>KASUS LAB: FritzFrog, Cacing Golang yang Ngamuk dan Bikin Kiamat di Sistem Root — DFORUM</title>
+<meta name="description" content="Laporan analisis FritzFrog, worm P2P berbasis Golang dengan kemampuan menambang kripto dan membuat backdoor pada sistem Linux."/>
+<title>Laporan Analisis Malware: FritzFrog (Worm P2P Berbasis Golang) — DFORUM</title>
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link as="font" crossorigin="" href="../assets/font/chuck_noon/Chuck%20Noon.ttf" rel="preload" type="font/ttf"/>
 <link as="font" crossorigin="" href="../assets/font/AA_typewriter.ttf" rel="preload" type="font/ttf"/>
@@ -27,15 +28,41 @@
 <a class="back-link" href="../index.html">
      ← KEMBALI KE BERANDA
     </a>
-<p class="article-kicker">
-     DOSSIER MALWARE / LAPORAN LAPANGAN
-    </p>
-<h1>KASUS LAB: FritzFrog, Cacing Golang yang Ngamuk dan Bikin Kiamat di Sistem Root</h1><p class="article-meta">Oleh: Redaksi DForum (Analis Independen) | Tanggal Rilis: 28 Oktober 2026 | Kategori: Investigasi Worm &amp; Botnet</p>
+<p class="article-kicker">LAPORAN ANALISIS MALWARE</p>
+<h1>Laporan Analisis Malware: FritzFrog (Worm P2P Berbasis Golang)</h1>
+<p class="article-meta">Analis: Redaksi DForum | Tanggal: 28 Oktober 2026 | Lingkungan Lab: VirtualBox (Host: Linux Mint) -&gt; VM REMnux (Host-only) + INetSim | Target File: malware3.elf (16.6 MB -&gt; 22.3 MB setelah unpacking)</p>
 </header>
-<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout"><p class="article-lead">YOGYAKARTA — Ini bukan virus sembarangan. Namanya FritzFrog, sebuah Worm (cacing) mutakhir yang ditulis pake bahasa Golang (Go). Bedanya sama virus lain, dia nyebar mandiri lewat jaringan pake protokol P2P (Peer-to-Peer) dan nekat nge-Brute-Force layanan SSH. Tanggal 28 Oktober, kami narik sampel file .elf berukuran 16.6 MB dari MalwareBazaar. Dia nggak cuma nambang kripto (CoinMiner), tapi punya misi bikin "pintu belakang" (Backdoor) dengan nambahin user baru di sistem yang kena infeksi.</p><h2>Nyebar Tanpa Diundang</h2><p>Prosedurnya standar lab. File diunduh, diekstrak di PC asli, terus dikirim ke VM REMnux pake HTTP Server lokal. Analisis statis kami jalanin pake file, upx, dan strings. Tapi, karena ini file Golang, hasil strings-nya super berantakan (noisy) dan nyampur sama memori internal Go.</p><h2>Jeroan Golang yang Berantakan</h2><p>Pas dibedah, file ini berukuran 16.6 MB, dan setelah di-unpack dari UPX, melar jadi 22.3 MB. Ini yang kami temuin:</p><ul><li>Ada indikasi protokol jaringan: ssh, dns, udp, ftp.</li><li>Ditemukan string iaesudonode. Ternyata ini perintah rahasia buat bikin user baru.</li><li>Ada indikasi kredensial default: root, 1234, dan IP 2.5.4.6 (kemungkinan password default perangkat IoT).</li></ul><h2>Aksi Ngamuk sebagai Root (Analisis Dinamis)</h2><p>Ini bagian paling gila. Kami eksekusi file-nya di dalem VM pake akses Root (sudo ./malware3.elf).</p><ul><li>Langsung Kabur: Malware ini langsung jalan di background, nggak nahan terminal.</li><li>Efek Samping Fatal: Beberapa saat kemudian, sistem tiba-tiba nampilin layar login baru dengan user bernama node.</li><li>Kiamat Sistem: Worm ini berhasil nambahin user node ke /etc/passwd. Ini taktik Persistence (pintu belakang) biar hacker bisa masuk kapan aja. Karena dia jalan sebagai Root, dia juga ngerusak kredensial sistem. User asli (remnux) langsung gagal login (Password Authentication Failed).</li></ul><h2>Pembersihan Darurat (Incident Response)</h2><p>Karena dia udah dapet akses Root (tingkat tertinggi di Linux) dan ngerusak file autentikasi, bersih-bersih manual udah nggak efisien. Langkah yang kami ambil:</p><ul><li>Power Off: Matiin paksa mesin virtual.</li><li>Rollback Snapshot: Balikin VM ke kondisi terakhir sebelum infeksi (Sebelum-FritzFrog). Ini best practice mutlak: kalau sistem udah di-root, hancurin dan pulihin dari backup.</li></ul><h2>Catatan Redaksi (Pelajaran Penting)</h2><ul><li>Waspada Golang: Malware berbasis Go ukurannya gede dan susah dianalisis pake strings biasa.</li><li>Bahaya Root: Jalanin Worm sebagai sudo itu sama aja ngasih dia kekuatan dewa buat ngubah password dan bikin user baru.</li><li>Snapshot adalah Nyawa: Tanpa snapshot, kami harus nginstal ulang REMnux dari nol gara-gara ulah si cacing ini.</li></ul><p>DENGERIN, BEGO! Dokumen ini dibuat cuma buat riset edukasi anonim. Kami nggak nyebarin virusnya. Kalau lo pake info ini buat nyerang orang, itu dosa lo sendiri, jangan bawa-bawa nama DForum.</p></div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
+<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout">
+<p class="article-lead"><strong>YOGYAKARTA, DFORUM —</strong> Sampel yang dianalisis dalam laporan ini merupakan sebuah Worm mutakhir yang ditulis menggunakan bahasa pemrograman Golang (Go). Malware ini dirancang untuk menyebar secara mandiri melalui jaringan menggunakan protokol P2P (Peer-to-Peer) dan melakukan serangan Brute-Force pada layanan SSH. Selain berfungsi sebagai penambang kripto (CoinMiner), FritzFrog memiliki kemampuan membuat Backdoor dengan menambahkan pengguna baru pada sistem yang terinfeksi.</p>
+
+<h2>Alur Operasi (Metodologi)</h2>
+<p>Prosedur analisis dilakukan di lingkungan laboratorium tertutup. Sampel diunduh dari MalwareBazaar, diekstrak pada PC host, lalu ditransfer ke mesin virtual (VM) REMnux menggunakan HTTP Server lokal. Penulis melakukan analisis statis menggunakan tools <code>file</code>, <code>upx</code>, dan <code>strings</code>. Sebagai catatan, karena berbasis Golang, hasil ekstraksi <code>strings</code> sangat padat (noisy) dan bercampur dengan memori internal Go. Selanjutnya, sampel dieksekusi dengan hak akses <code>sudo</code> (Root) untuk mengamati perilaku penyebarannya secara dinamis.</p>
+
+<h2>Hasil Analisis Statis</h2>
+<p>Identifikasi awal menunjukkan file tersebut adalah ELF 64-bit LSB executable, statically linked. File menggunakan kompresi UPX dan berhasil di-unpack dari 16.6 MB menjadi 22.3 MB. Dari hasil ekstraksi, ditemukan indikasi protokol jaringan seperti <code>ssh</code>, <code>dns</code>, <code>udp</code>, dan <code>ftp</code>. Temuan kunci lainnya adalah adanya string <code>iaesudonode</code> yang berfungsi sebagai perintah untuk membuat pengguna baru. Penulis juga mendeteksi indikasi kredensial bawaan (default) seperti <code>root</code>, <code>1234</code>, dan IP <code>2.5.4.6</code>, yang umumnya menjadi celah keamanan pada perangkat Internet of Things (IoT).</p>
+
+<h2>Hasil Analisis Dinamis</h2>
+<p>Sampel dieksekusi di dalam VM menggunakan perintah <code>sudo ./malware3.elf</code>. Malware tersebut langsung berjalan di latar belakang (background). Beberapa saat setelah eksekusi, terjadi anomali fatal: layar login menampilkan pengguna baru bernama <code>node</code>. Pemeriksaan mengonfirmasi bahwa worm tersebut berhasil menyuntikkan pengguna <code>node</code> ke dalam sistem (<code>/etc/passwd</code>). Taktik ini merupakan bentuk Persistence (pintu belakang) agar penyerang dapat mengakses sistem kembali. Akibat dieksekusi sebagai Root, malware mengubah kredensial sistem dan menyebabkan pengguna asli (<code>remnux</code>) mengalami kegagalan autentikasi.</p>
+
+<h2>Indicators of Compromise (IoC)</h2>
+<ul>
+  <li>User Account: <code>node</code> (Backdoor yang dibuat malware).</li>
+  <li>Strings: <code>iaesudonode</code>, <code>_E0Fcgodnsudpftpsh</code>.</li>
+  <li>Network: Upaya koneksi keluar melalui SSH (Port 22) untuk menyebar ke mesin lain.</li>
+</ul>
+
+<h2>Pelajaran Penting</h2>
+<ol>
+  <li>Waspada Golang: Malware berbasis Go berukuran besar dan sulit dianalisis dengan <code>strings</code> konvensional karena strukturnya.</li>
+  <li>Bahaya Akses Root: Menjalankan Worm sebagai <code>sudo</code> memberikan kendali penuh untuk mengubah password sistem dan membuat pengguna baru.</li>
+  <li>Pentingnya Snapshot: Tanpa snapshot, analis harus menginstal ulang REMnux dari awal setelah sistem terinfeksi.</li>
+</ol>
+
+<p>Dokumen ini dibuat sebagai bagian dari riset keamanan siber. Segala bentuk penyalahgunaan di luar konteks edukasi adalah tanggung jawab pengguna.</p>
+</div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
 <div class="ioc-heading-row">
 <h2 id="ioc-title">
-        INDICATORS OF COMPROMISE (IoC)
+        Indicators of Compromise (IoC)
        </h2>
 <button aria-label="Salin semua indikator ke clipboard" class="copy-button" data-copy-ioc="" type="button">
         COPY

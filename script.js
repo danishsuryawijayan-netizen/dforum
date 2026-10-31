@@ -256,7 +256,7 @@ function filterArticleCards() {
   const query = articleSearch?.value.trim().toLocaleLowerCase("id-ID") || "";
   const selectedFilter = activeCategoryFilter?.toLocaleUpperCase("id-ID") || "";
   const hasSelection = Boolean(query || activeCategoryFilter);
-  const articleCards = Array.from(articleGrid.querySelectorAll(".article-card"));
+  const articleCards = Array.from(articleGrid.querySelectorAll(".article-card, .card-berita"));
   let visibleCount = 0;
 
   articleCards.forEach((card) => {
@@ -323,7 +323,11 @@ function buatKartuBerita(berita) {
   const kategori = typeof berita.kategori === "string" ? berita.kategori.trim() : "BERITA";
   const link = typeof berita.link === "string" ? berita.link.trim() : "";
   const sumber = typeof berita.sumber === "string" ? berita.sumber.trim() : "";
-  const linkSumber = typeof berita.link_sumber === "string" ? berita.link_sumber.trim() : "";
+  const gambar = typeof berita.gambar === "string"
+    ? berita.gambar.trim()
+    : typeof berita.image === "string"
+      ? berita.image.trim()
+      : "";
   if (!judul || !tanggal || !link || /^[a-z][a-z\d+.-]*:/i.test(link) || link.startsWith("//")) return null;
 
   const baseUrl = new URL("./", document.baseURI);
@@ -331,65 +335,55 @@ function buatKartuBerita(berita) {
   const pathBerita = new URL("berita/", baseUrl).pathname;
   if (tujuan.origin !== baseUrl.origin || !tujuan.pathname.startsWith(pathBerita)) return null;
 
-  const card = document.createElement("article");
-  card.className = "article-card berita-card is-search-hidden";
+  const defaultGambar = new URL("assets/img/binance.jpg", baseUrl);
+  let urlGambar = defaultGambar;
+  if (gambar) {
+    try {
+      const kandidatGambar = new URL(gambar, baseUrl);
+      if (kandidatGambar.origin === baseUrl.origin) urlGambar = kandidatGambar;
+    } catch {
+      // Use the default image when the JSON image path is invalid.
+    }
+  }
+
+  const card = document.createElement("div");
+  card.className = "card-berita is-search-hidden";
   card.dataset.category = (kategori || "BERITA").toLocaleUpperCase("id-ID");
 
-  const topline = document.createElement("div");
-  topline.className = "card-topline";
-  const index = document.createElement("span");
-  index.className = "card-index";
-  index.textContent = "KABAR SIBER";
-  topline.append(index);
+  const imageWrapper = document.createElement("div");
+  imageWrapper.className = "card-berita-img-wrapper";
+  const image = document.createElement("img");
+  image.className = "card-berita-img";
+  image.src = urlGambar.href;
+  image.alt = judul;
+  imageWrapper.append(image);
 
-  const labelKategori = document.createElement("p");
-  labelKategori.className = "card-category";
+  const content = document.createElement("div");
+  content.className = "card-berita-content";
+
+  const labelKategori = document.createElement("span");
+  labelKategori.className = "card-kategori";
   labelKategori.textContent = kategori || "BERITA";
 
-  const heading = document.createElement("h2");
-  const titleLink = document.createElement("a");
-  titleLink.className = "news-title-link";
-  titleLink.href = tujuan.href;
-  titleLink.textContent = judul;
-  heading.append(titleLink);
+  const heading = document.createElement("h3");
+  heading.className = "card-judul";
+  heading.textContent = judul;
 
   const date = document.createElement("p");
-  date.className = "card-description berita-date";
+  date.className = "card-tanggal";
   date.textContent = tanggal;
 
   const sourceLine = document.createElement("p");
-  sourceLine.className = "berita-source";
-  sourceLine.append(document.createTextNode("Sumber: "));
-  if (sumber && linkSumber) {
-    try {
-      const sourceUrl = new URL(linkSumber);
-      if (sourceUrl.protocol !== "https:" && sourceUrl.protocol !== "http:") {
-        throw new Error("URL sumber harus menggunakan HTTP atau HTTPS");
-      }
-      const sourceLink = document.createElement("a");
-      sourceLink.className = "source-link";
-      sourceLink.href = sourceUrl.href;
-      sourceLink.target = "_blank";
-      sourceLink.rel = "noopener noreferrer";
-      sourceLink.textContent = sumber;
-      sourceLine.append(sourceLink);
-    } catch {
-      sourceLine.append(document.createTextNode(sumber));
-    }
-  } else {
-    sourceLine.append(document.createTextNode(sumber || "Tidak dicantumkan"));
-  }
+  sourceLine.className = "card-sumber";
+  sourceLine.textContent = `Sumber: ${sumber || "Tidak dicantumkan"}`;
 
   const action = document.createElement("a");
-  action.className = "card-action";
+  action.className = "btn-baca";
   action.href = tujuan.href;
-  action.append(document.createTextNode("BACA BERITA "));
-  const arrow = document.createElement("span");
-  arrow.setAttribute("aria-hidden", "true");
-  arrow.textContent = "→";
-  action.append(arrow);
+  action.textContent = "BACA BERITA →";
 
-  card.append(topline, labelKategori, heading, date, sourceLine, action);
+  content.append(labelKategori, heading, date, sourceLine, action);
+  card.append(imageWrapper, content);
   return card;
 }
 

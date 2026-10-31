@@ -111,7 +111,24 @@ button { font: inherit; }
   outline: 3px solid var(--auburn);
   outline-offset: 4px;
 }
-.wordmark {
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+.brand-logo {
+  width: 70px;
+  height: auto;
+  border: 2px solid #9E2A2B;
+  padding: 2px;
+}
+.header-brand h1.site-title {
+  margin: 0;
+  text-align: left;
+}
+.site-title {
   margin: clamp(1.1rem, 3vw, 2rem) 0 0;
   color: var(--auburn);
   font-size: clamp(5rem, 18vw, 14rem);
@@ -119,7 +136,7 @@ button { font: inherit; }
   letter-spacing: -.055em;
   line-height: .88;
 }
-.home-page .wordmark { font-size: clamp(3.2rem, 10vw, 7rem) !important; }
+.home-page .site-title { font-size: clamp(3.2rem, 10vw, 7rem) !important; }
 .masthead-subtitle {
   margin: clamp(.8rem, 2vw, 1.4rem) 0 0;
   color: var(--slate);
@@ -475,7 +492,7 @@ body.dark-mode .theme-toggle { background: var(--paper-white); color: var(--slat
 }
 @media (max-width: 600px) {
   .page-shell { width: min(100% - 1.5rem, 40rem); padding-top: 1rem; }
-  .home-page .wordmark { font-size: clamp(3rem, 12vw, 4.2rem) !important; }
+  .home-page .site-title { font-size: clamp(3rem, 12vw, 4.2rem) !important; }
   .site-purpose { margin-top: 1rem; text-align: left; }
   .warning-banner { align-items: flex-start; flex-direction: column; gap: .55rem; text-align: left; }
   .main-nav { justify-content: flex-start; column-gap: 1rem; row-gap: .15rem; }
@@ -638,8 +655,8 @@ h1, .article-title {
     margin-bottom: 10px;
 }
 
-/* Preserve the oversized wordmark on the homepage. */
-.wordmark {
+/* Keep the homepage brand title legible beside its logo. */
+.site-title {
     font-size: clamp(5rem, 18vw, 14rem) !important;
 }
 
@@ -685,4 +702,90 @@ h1, .article-title {
         line-height: 1 !important;
         margin-right: 5px !important;
     }
+
+    .brand-logo {
+        width: 50px;
+    }
+}
+
+/* Cards for articles generated from berita.json. */
+.card-berita {
+    min-width: 0;
+    height: 100%;
+    background-color: #FFF3B0;
+    border: 2px solid #335C67;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.card-berita.is-search-hidden { display: none; }
+
+.card-berita-img-wrapper {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-bottom: 2px solid #335C67;
+}
+
+.card-berita-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(120%);
+}
+
+.card-berita-content {
+    min-width: 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-kategori {
+    margin-bottom: 5px;
+    color: #9E2A2B;
+    font-family: 'AATypewriter', monospace;
+    font-size: .8rem;
+    overflow-wrap: anywhere;
+}
+
+.card-judul {
+    margin: 0 0 10px;
+    color: #9E2A2B;
+    font-family: 'ChuckNoon', serif;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.card-tanggal, .card-sumber {
+    margin: 0 0 5px;
+    color: #335C67;
+    font-family: 'AATypewriter', monospace;
+    font-size: .85rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.btn-baca {
+    display: inline-block;
+    width: fit-content;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #9E2A2B;
+    color: #9E2A2B;
+    font-family: 'AATypewriter', monospace;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-baca:hover, .btn-baca:focus-visible { color: #335C67; }
+
+@media (max-width: 600px) {
+    .card-berita-img-wrapper { height: 160px; }
+    .card-berita-content { padding: 12px; }
+    .card-judul { font-size: 1.35rem; }
 }

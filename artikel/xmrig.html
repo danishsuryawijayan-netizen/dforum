@@ -4,8 +4,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta content="YOGYAKARTA — Dunia siber emang nggak ada habisnya bikin geger. Tanggal 28 Oktober kemarin, tim redaksi lagi asik ngoprek di markas rahasia (baca: Lab VirtualBox). Kami sengaja narik satu sampel file .elf berukuran 8.6 MB dari sarang malware, MalwareBazaar. Bukan file sembarangan, ini file eksekusi Linux murni (ELF 64-bit LSB executable, x86-64) yang dibekali jurus rahasia." name="description"/>
-<title>KASUS LAB: Saat Komputer Lo Diperbudak Jadi Zombie Penambang Kripto Haram — DFORUM</title>
+<meta name="description" content="Laporan analisis sampel ELF yang menggabungkan XMRig cryptominer dan Mirai botnet, termasuk temuan konfigurasi eksternal dan hash SHA-256."/>
+<title>Laporan Analisis Malware: XMRig &amp; Mirai (Cryptominer &amp; Botnet) — DFORUM</title>
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link as="font" crossorigin="" href="../assets/font/chuck_noon/Chuck%20Noon.ttf" rel="preload" type="font/ttf"/>
 <link as="font" crossorigin="" href="../assets/font/AA_typewriter.ttf" rel="preload" type="font/ttf"/>
@@ -27,15 +28,49 @@
 <a class="back-link" href="../index.html">
      ← KEMBALI KE BERANDA
     </a>
-<p class="article-kicker">
-     DOSSIER MALWARE / LAPORAN LAB
-    </p>
-<h1>KASUS LAB: Saat Komputer Lo Diperbudak Jadi Zombie Penambang Kripto Haram</h1><p class="article-meta">Oleh: Redaksi DForum (Analis Independen) | Tanggal Rilis: 28 Oktober 2026 | Kategori: Investigasi Cryptominer &amp; Botnet</p>
+<p class="article-kicker">LAPORAN ANALISIS MALWARE</p>
+<h1>Laporan Analisis Malware: XMRig &amp; Mirai (Cryptominer &amp; Botnet)</h1>
+<p class="article-meta">Analis: Redaksi DForum | Tanggal: 28 Oktober 2026 | Lingkungan Lab: VirtualBox (Host: Linux Mint) -&gt; VM REMnux (Host-only) + INetSim | Target File: 99e37c7657f4401aa2f3ad96c939e849729daad26daffb7063354821debf0b92.elf (8.6 MB)</p>
 </header>
-<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout"><p class="article-lead">YOGYAKARTA — Dunia siber emang nggak ada habisnya bikin geger. Tanggal 28 Oktober kemarin, tim redaksi lagi asik ngoprek di markas rahasia (baca: Lab VirtualBox). Kami sengaja narik satu sampel file .elf berukuran 8.6 MB dari sarang malware, MalwareBazaar. Bukan file sembarangan, ini file eksekusi Linux murni (ELF 64-bit LSB executable, x86-64) yang dibekali jurus rahasia.</p><p>Pas kami bedah, ternyata isinya bukan satu mahluk, tapi dua sekaligus. Di dalemnya ada XMRig (tukang nambang kripto) yang digabung sama Mirai (botnet legendaris). Tujuan mereka cuma satu dan sangat biadab: Nguras sumber daya PC lo tanpa lo sadar!</p><h2>Kronologi Penangkapan</h2><p>Kami nggak asal comot file ini ke PC asli, bego! Itu sama aja lo bunuh diri. Prosedurnya rapi. File diunduh dari MalwareBazaar (password: infected), diekstrak pake tool 7z di PC asli, terus dilempar ke dalam kurungan mati namanya VM REMnux. Biar aman, file dikirim lewat HTTP Server lokal (python3 -m http.server 8000) tanpa koneksi internet asli.</p><p>Sesampainya di dalem kurungan, kami mulai bedah. Pertama pake Analisis Statis (baca isi file tanpa ngejalaninnya), terus coba Analisis Dinamis (ngejalanin virusnya buat liat dia ngamuk).</p><h2>Bongkar Jeroan (Analisis Statis)</h2><p>Pas dipindai pake alat strings (buat ngeliat teks tersembunyi di dalem file), ketahuan deh bokongnya. Untungnya virus ini nggak dikompres pake UPX (NotPacked), jadi gampang diintip.</p><ul><li>Situs Mining: Ketahuan nyari nicehash.com, situs mining pool kripto populer.</li><li>Argumen Mesin: Ada parameter --algo=ALGO dan --keepalive, ciri khas mesin XMRig.</li><li>Target Koin: Dia nyari algoritma cryptonight-monerov7 dan monerov8. Jelas, ini buat nambang koin Monero.</li><li>Sistem Operasi: Ada string /bin/sh, artinya dia punya akses buat ngeksekusi perintah terminal.</li><li>Kriptografi: Ratusan OID OpenSSL (AES, SHA, RSA) dipake buat enkripsi komunikasinya biar susah dilacak.</li></ul><h2>Eksekusi &amp; Plot Twist (Analisis Dinamis)</h2><p>Nah, ini bagian paling seru. File dijalanin di dalem VM pake perintah ./malware.elf. Kami udah siap-siap liat PC ngebul atau nge-lag. Eh, taunya BAM! File itu malah langsung mati (exit) bego! Dia ngasih pesan error kayak gini: unable to open "/home/remnux/config.json" dan no valid configuration found, try https://sysup.org/wizard</p><h2>Kenapa Mati? (Diagnosis)</h2><p>Karena virus ini cuma "mesin" penambang doang, dia nggak punya otak! Dia nggak tau harus nambang buat siapa kalau nggak ada file config.json. Di dunia nyata, para hacker jahat itu nggak asal naruh file .elf gini. Mereka biasanya naro dropper script (kayak file .sh) yang tugasnya nyiapin file config.json (isinya alamat dompet hacker dan alamat server). Tanpa konfigurasi itu, virus ini milih bunuh diri daripada nambang gratisan.</p><h2>Catatan Redaksi (Pelajaran Penting)</h2><ul><li>Internet Palsu (INetSim) Itu Nyawa: Pas dibedah, kami pake internet palsu (INetSim). Makanya virus ini nggak bisa ngunduh file config.json dari internet asli. Kalau nggak dipalsuin, dia udah ngamuk.</li><li>Strings Itu Penting: Daripada capek ngejalanin virus, mending cek teks tersembunyi (strings) dulu. Kami udah tau ini XMRig sebelum dia repot-repot jalan.</li><li>Kombinasi Ganda: Hacker sekarang makin pinter, mereka gabungin DDoS + Miner biar cuannya maksimal. Hati-hati!</li></ul><p>DENGERIN, BEGO! Dokumen ini dibuat cuma buat riset edukasi anonim. Kami nggak nyebarin virusnya. Kalau lo pake info ini buat nyerang orang, itu dosa lo sendiri, jangan bawa-bawa nama DForum.</p></div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
+<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout">
+<p class="article-lead"><strong>YOGYAKARTA, DFORUM —</strong> Sampel yang dianalisis dalam laporan ini merupakan sebuah file eksekusi Linux (ELF) berukuran 8.6 MB yang diperoleh dari repositori MalwareBazaar. File tersebut menggabungkan dua jenis ancaman siber sekaligus: XMRig (Cryptominer) dan Mirai (Botnet). Tujuannya adalah mencuri sumber daya komputasi (CPU/RAM) perangkat korban untuk menambang kripto Monero secara ilegal, sekaligus menjadikannya bagian dari "tentara zombie" untuk melancarkan serangan DDoS (Distributed Denial of Service).</p>
+
+<h2>Alur Operasi (Metodologi)</h2>
+<p>Proses analisis dilakukan di lingkungan laboratorium tertutup. Sampel diunduh dengan proteksi password (<code>infected</code>), diekstrak menggunakan tool <code>7z</code> pada PC host, lalu ditransfer ke mesin virtual (VM) REMnux melalui HTTP Server lokal (<code>python3 -m http.server 8000</code>). Selanjutnya, penulis melakukan analisis statis (membaca isi file tanpa menjalankannya) dan analisis dinamis (menjalankan sampel di lingkungan terisolasi untuk mengamati perilakunya).</p>
+
+<h2>Hasil Analisis Statis</h2>
+<p>Melalui identifikasi awal, file tersebut merupakan ELF 64-bit LSB executable, x86-64 (biner Linux murni). Sampel tidak dikompresi menggunakan UPX (NotPacked), sehingga kode aslinya dapat dibaca langsung. Dari ekstraksi <code>strings</code>, ditemukan beberapa temuan kunci:</p>
+<ul>
+  <li>Situs Mining: Ditemukan string <code>nicehash.com</code> (sebuah mining pool kripto populer).</li>
+  <li>Argumen XMRig: Ditemukan parameter <code>--algo=ALGO</code> dan <code>--keepalive</code>, yang merupakan parameter khas mesin XMRig.</li>
+  <li>Algoritma Monero: Ditemukan algoritma <code>cryptonight-monerov7</code> dan <code>monerov8</code> yang spesifik digunakan untuk menambang koin Monero.</li>
+  <li>Konfigurasi Eksternal: Ditemukan referensi ke <code>sysup.org</code>, situs untuk mengunduh file konfigurasi.</li>
+  <li>Sistem Operasi: Ditemukan <code>/bin/sh</code>, indikasi malware dapat mengeksekusi perintah shell.</li>
+  <li>Kriptografi: Ditemukan ratusan OID OpenSSL (AES, SHA, RSA) untuk enkripsi komunikasi.</li>
+</ul>
+
+<h2>Hasil Analisis Dinamis</h2>
+<p>Sampel dieksekusi di dalam VM menggunakan perintah <code>./malware.elf</code>. Namun, malware gagal berjalan dan langsung berhenti (exit). Pesan kesalahan menunjukkan bahwa file tidak dapat membuka <code>/home/remnux/config.json</code> dan tidak menemukan konfigurasi yang valid. Diagnosis menunjukkan bahwa file tersebut berfungsi sebagai mesin penambang tanpa konfigurasi. Dalam skenario nyata, file ini biasanya dijatuhkan oleh dropper script, misalnya file <code>.sh</code>, yang bertugas membuat <code>config.json</code>. File konfigurasi tersebut berisi alamat dompet (wallet) penyerang dan alamat server mining pool. Tanpa file tersebut, malware tidak mengetahui target penambangan sehingga menghentikan prosesnya sendiri. Pada percobaan ini, pesan error juga merujuk ke <code>https://sysup.org/wizard</code>.</p>
+
+<h2>Indicators of Compromise (IoC)</h2>
+<ul>
+  <li>Domain/URL: <code>nicehash.com</code>, <code>sysup.org</code>.</li>
+  <li>File Path: <code>/home/remnux/config.json</code> (file yang dicari malware).</li>
+  <li>Hash (SHA-256): <code>99e37c7657f4401aa2f3ad96c939e849729daad26daffb7063354821debf0b92</code>.</li>
+</ul>
+
+<h2>Pelajaran Penting</h2>
+<ol>
+  <li>Fungsi Internet Palsu (INetSim): Penggunaan INetSim sangat krusial. Karena koneksi dicegat, malware gagal mengunduh <code>config.json</code> dari internet asli sehingga mencegahnya beraksi secara nyata.</li>
+  <li>Efisiensi Analisis Statis: Membaca <code>strings</code> lebih dulu sangat menghemat waktu. Identifikasi XMRig dapat dilakukan sebelum sampel dijalankan.</li>
+  <li>Kombinasi Payload: Penyerang modern sering menggabungkan beberapa payload (DDoS dan miner) demi keuntungan maksimal.</li>
+</ol>
+
+<p>Dokumen ini dibuat sebagai bagian dari riset keamanan siber. Segala bentuk penyalahgunaan di luar konteks edukasi adalah tanggung jawab pengguna.</p>
+</div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
 <div class="ioc-heading-row">
 <h2 id="ioc-title">
-        INDICATORS OF COMPROMISE (IoC)
+        Indicators of Compromise (IoC)
        </h2>
 <button aria-label="Salin semua indikator ke clipboard" class="copy-button" data-copy-ioc="" type="button">
         COPY

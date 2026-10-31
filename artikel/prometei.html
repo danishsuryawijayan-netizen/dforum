@@ -4,8 +4,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta content="YOGYAKARTA — Beda sama virus abal-abal, malware yang satu ini kelas APT (Advanced Persistent Threat). Namanya Prometei. Dia bukan cuma nongol sebentar, dia modular, licik, dan siap nempel di sistem lo kayak parasit dalam jangka panjang. Tanggal 28 Oktober, kami narik sampel file .elf berukuran 1.2 MB dari MalwareBazaar buat dibedah di lab. Sasaran utama Prometei bukan sekadar nambang kripto, tapi nyuri kredensial (password) lo. Sistem operasi Linux maupun Windows sama-sama jadi incerannya." name="description"/>
-<title>KASUS LAB: Prometei, Penyusup Licik yang Bersembunyi di Balik Nama File Sampah — DFORUM</title>
+<meta name="description" content="Laporan analisis Prometei, malware modular APT yang menargetkan Linux dan Windows serta menerapkan persistence melalui layanan systemd."/>
+<title>Laporan Analisis Malware: Prometei (Linux APT) — DFORUM</title>
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link as="font" crossorigin="" href="../assets/font/chuck_noon/Chuck%20Noon.ttf" rel="preload" type="font/ttf"/>
 <link as="font" crossorigin="" href="../assets/font/AA_typewriter.ttf" rel="preload" type="font/ttf"/>
@@ -27,15 +28,54 @@
 <a class="back-link" href="../index.html">
      ← KEMBALI KE BERANDA
     </a>
-<p class="article-kicker">
-     DOSSIER MALWARE / LAPORAN LAB
-    </p>
-<h1>KASUS LAB: Prometei, Penyusup Licik yang Bersembunyi di Balik Nama File Sampah</h1><p class="article-meta">Oleh: Redaksi DForum (Analis Independen) | Tanggal Rilis: 28 Oktober 2026 | Kategori: Investigasi APT &amp; Backdoor</p>
+<p class="article-kicker">LAPORAN ANALISIS MALWARE</p>
+<h1>Laporan Analisis Malware: Prometei (Linux APT)</h1>
+<p class="article-meta">Analis: Redaksi DForum | Tanggal: 28 Oktober 2026 | Lingkungan Lab: VirtualBox (Host: Linux Mint) -&gt; VM REMnux (Host-only) + INetSim | Target File: malware2.elf (1.2 MB)</p>
 </header>
-<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout"><p class="article-lead">YOGYAKARTA — Beda sama virus abal-abal, malware yang satu ini kelas APT (Advanced Persistent Threat). Namanya Prometei. Dia bukan cuma nongol sebentar, dia modular, licik, dan siap nempel di sistem lo kayak parasit dalam jangka panjang. Tanggal 28 Oktober, kami narik sampel file .elf berukuran 1.2 MB dari MalwareBazaar buat dibedah di lab. Sasaran utama Prometei bukan sekadar nambang kripto, tapi nyuri kredensial (password) lo. Sistem operasi Linux maupun Windows sama-sama jadi incerannya.</p><h2>Modus Operandi</h2><p>Buat nangkep dia, kami ekstrak file .zip-nya (password: infected) di PC asli pake 7z x. Abis itu, filenya kami selundupin ke VM REMnux lewat HTTP Server lokal via jaringan Host-Only. Begitu masuk kurungan, PC asli langsung kami bersihin total biar nggak ada sisa. Di dalem lab, kami bedah pake dua cara: Analisis Statis (membedah kode tanpa ngejalanin) dan Analisis Dinamis (ngejalanin virusnya buat liat aksinya secara real-time).</p><h2>Bongkar Bungkus UPX (Analisis Statis)</h2><p>Pas awal dicek, file ini ELF 64-bit LSB executable, x86-64, statically linked, stripped. Simpelnya, ini file Linux murni tanpa simbol debug. Tapi, dia pake packer UPX buat nyembunyiin jeroannya. Untung aja kami bisa buka bungkusnya pake perintah upx -d malware2.elf, dan ukurannya melar dari 565 KB jadi 1.3 MB. Pas dibongkar, ini yang nemu:</p><ul><li>Server Command &amp; Control (C2): Dia nyari IP 177.221.180.26.</li><li>Jaringan Anonim: Ada alamat .onion (Tor) dan .i2p buat komunikasi cadangan kalau IP utamanya diblokir.</li><li>Target Pencurian: Dia ngeincer file /etc/shadow, /etc/passwd, dan direktori .ssh/pcc0 (kunci SSH).</li><li>URL Request: Dia lapor ke server pake pola /cgi-bin/prometei.cgi atau /cgi-bin/p.cgi?auth=hash.</li></ul><h2>Aksi Licik di Dalam Kandang (Analisis Dinamis)</h2><p>Pas pertama dijalanin sebagai user biasa (./malware2.elf), dia langsung mati bego! Error-nya Usermode install...Fail. Ternyata dia butuh crontab buat bertahan hidup, dan REMnux nggak punya itu. Kami coba lebih sadis: jalanin pake akses Root (sudo ./crashed.dump). Tunggu, kenapa namanya berubah? Baca bagian selanjutnya.</p><h2>Plot Twist: Proses Hantu</h2><ul><li>Masquerading (Penyamaran): Pas dijalanin, file asli malware2.elf tiba-tiba menghilang dan ganti jadi file baru bernama crashed.dump (ukurannya sama persis). Dia pura-pura jadi file sampah biar nggak curiga!</li><li>Systemd Service Palsu: Pas dijalanin sebagai root, dia nampilin pesan sukses: Created symlink /etc/systemd/system/multi-user.target.wants/upluginplay.service. Dia bikin layanan sistem palsu biar otomatis nyala tiap PC reboot.</li><li>Gagal Total: Meskipun ngaku "OK", sebenarnya upluginplay.service itu broken symlink. Kenapa? Karena koneksi dia ke internet asli dicegat sama INetSim (internet palsu di lab), jadi dia gagal ngunduh file pendukung.</li><li>Proses Hantu: Pas kami cek pake ps aux, ternyata dia masih jalan di background (sh -c /home/remnux/crashed.dump -Dcomsvc).</li></ul><h2>Pembersihan TKP (Incident Response)</h2><p>Karena dia udah kotorin sistem, kami lakuin pembersihan paksa:</p><ul><li>Kill Process: Matiin paksa pake PID: sudo kill -9 3588 4255 4256</li><li>Hapus File: Hapus wujud asli dan kloningannya: sudo rm -f crashed.dump</li><li>Snapshot: Balikin VM ke kondisi bersih kayak sebelum infeksi.</li></ul><p>DENGERIN, BEGO! Dokumen ini dibuat cuma buat riset edukasi anonim. Kami nggak nyebarin virusnya. Kalau lo pake info ini buat nyerang orang, itu dosa lo sendiri, jangan bawa-bawa nama DForum.</p></div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
+<main class="article-layout newspaper-page"><article class="article-body"><div class="newspaper-layout">
+<p class="article-lead"><strong>YOGYAKARTA, DFORUM —</strong> Sampel yang dianalisis dalam laporan ini merupakan sebuah malware modular tingkat lanjut (Advanced Persistent Threat/APT) yang menargetkan sistem operasi Linux dan Windows. Prometei dikenal karena kemampuannya mencuri kredensial (password), menyebar secara lateral, dan bertahan hidup di dalam sistem (persistence). Sampel yang dianalisis merupakan file eksekusi Linux (ELF) yang dikemas menggunakan packer UPX.</p>
+
+<h2>Alur Operasi (Metodologi)</h2>
+<p>Prosedur analisis dilakukan di lingkungan laboratorium tertutup. Sampel diekstrak pada PC host menggunakan tool <code>7z x</code>, lalu ditransfer ke mesin virtual (VM) REMnux menggunakan HTTP Server lokal via jaringan Host-Only. PC host segera dibersihkan setelah file dipindahkan. Selanjutnya, penulis melakukan analisis statis (membedah kode tanpa menjalankan file) dan analisis dinamis (menjalankan file untuk melihat aksinya secara real-time), sebelum akhirnya melakukan pembersihan sistem.</p>
+
+<h2>Hasil Analisis Statis</h2>
+<p>Sebelum dijalankan, file diidentifikasi sebagai ELF 64-bit LSB executable, x86-64, statically linked, stripped. File terdeteksi dibungkus menggunakan UPX dan berhasil dibuka menggunakan perintah <code>upx -d</code>; ukurannya membesar dari 565 KB menjadi 1.3 MB. Dari hasil pemindaian <code>strings</code>, ditemukan beberapa temuan kunci:</p>
+<ul>
+  <li>Command &amp; Control (C2) Server: Ditemukan IP <code>177.221.180.26</code>.</li>
+  <li>Jaringan Anonim: Ditemukan alamat <code>.onion</code> (Tor) dan <code>.i2p</code> untuk komunikasi cadangan jika IP utama diblokir.</li>
+  <li>Target Pencurian: Malware menargetkan file <code>/etc/shadow</code>, <code>/etc/passwd</code>, dan direktori <code>.ssh/pcc0</code> (kunci SSH).</li>
+  <li>URL Request: Malware menggunakan pola <code>/cgi-bin/prometei.cgi</code> atau <code>/cgi-bin/p.cgi?auth=hash</code> untuk melapor ke server.</li>
+</ul>
+
+<h2>Hasil Analisis Dinamis</h2>
+<p>Saat dieksekusi sebagai pengguna biasa (<code>./malware2.elf</code>), malware gagal berjalan dengan pesan <code>Usermode install...Fail</code> karena membutuhkan crontab yang tidak tersedia di REMnux. Saat dieksekusi sebagai Root (<code>sudo ./crashed.dump</code>), malware berjalan dan mendaftarkan dirinya sebagai layanan systemd. Analisis forensik mengungkap beberapa taktik penyamaran:</p>
+<ul>
+  <li>Masquerading (Penyamaran): File asli <code>malware2.elf</code> menghilang dan diganti dengan file baru bernama <code>crashed.dump</code> dengan ukuran yang sama untuk mengelabui analis.</li>
+  <li>Persistence Palsu: Malware mencoba membuat layanan <code>upluginplay.service</code>. Meskipun menampilkan pesan "OK", file layanan tersebut sebenarnya rusak (broken symlink) karena malware gagal mengunduh file pendukung dari internet yang dicegat oleh INetSim.</li>
+  <li>Proses Latar Belakang: Malware tetap berjalan di latar belakang sebagai <code>sh -c /home/remnux/crashed.dump -Dcomsvc</code> meskipun terminal telah kembali ke prompt.</li>
+</ul>
+<p>Tindakan pemulihan dilakukan dengan mematikan paksa proses malware (<code>sudo kill -9 3588 4255 4256</code>), menghapus file asli beserta kloningannya (<code>sudo rm -f crashed.dump</code>), dan mengambil snapshot VM bersih sebagai titik pemulihan.</p>
+
+<h2>Indicators of Compromise (IoC)</h2>
+<ul>
+  <li>IP Address: <code>177.221.180.26</code>.</li>
+  <li>File Name: <code>crashed.dump</code>, <code>upluginplay.service</code>, <code>pdefenderd.sh</code>.</li>
+  <li>File Path: <code>/etc/systemd/system/multi-user.target.wants/upluginplay.service</code>.</li>
+  <li>Network: Koneksi ke port 80 (HTTP) dengan parameter URL <code>/cgi-bin/prometei.cgi</code>.</li>
+</ul>
+
+<h2>Pelajaran Penting</h2>
+<ol>
+  <li>Adaptasi APT: Prometei menunjukkan bagaimana malware modern dapat beradaptasi dan menyamarkan diri dengan sangat baik.</li>
+  <li>Pentingnya Internet Palsu (INetSim): Pencegatan koneksi internet asli menggagalkan upaya malware untuk menyelesaikan proses persistence-nya.</li>
+  <li>Prosedur Insiden: Pembersihan manual setelah sistem terinfeksi malware tingkat lanjut (APT) sangat berisiko, sehingga snapshot rollback adalah pilihan paling aman.</li>
+</ol>
+
+<p>Dokumen ini dibuat sebagai bagian dari riset keamanan siber. Segala bentuk penyalahgunaan di luar konteks edukasi adalah tanggung jawab pengguna.</p>
+</div></article><section aria-labelledby="ioc-title" class="ioc-panel article-ioc">
 <div class="ioc-heading-row">
 <h2 id="ioc-title">
-        INDICATORS OF COMPROMISE (IoC)
+        Indicators of Compromise (IoC)
        </h2>
 <button aria-label="Salin semua indikator ke clipboard" class="copy-button" data-copy-ioc="" type="button">
         COPY
