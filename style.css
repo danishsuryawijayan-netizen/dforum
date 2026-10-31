@@ -584,20 +584,16 @@ body.dark-mode .theme-toggle { background: var(--paper-white); color: var(--slat
 /* Efek Foto Koran Jadul */
 .article-image {
     width: 100% !important;
-    max-width: 700px !important;
-    height: 300px !important; /* Kunci tinggi maksimal */
-    object-fit: contain !important; /* Biar gambar GAK nge-zoom, proporsional */
+    max-width: 100% !important; /* Lebar penuh sesuai kontainer koran */
+    height: 380px !important; /* Tinggi banner koran */
+    object-fit: cover !important; /* Biar gambar gak gepeng, dipotong tengahnya */
     display: block !important;
-    margin: 0 auto 10px auto !important;
+    margin: 0 auto 15px auto !important;
+    filter: grayscale(100%) contrast(150%) brightness(90%);
+    mix-blend-mode: multiply;
     border: 2px solid #335C67;
     padding: 5px;
     background-color: #FFF3B0;
-}
-
-@media screen and (max-width: 768px) {
-    .article-image {
-        height: 200px !important; /* Ukuran pas untuk HP */
-    }
 }
 .article-source-bottom {
     margin-top: 1.2rem;
@@ -608,9 +604,11 @@ body.dark-mode .theme-toggle { background: var(--paper-white); color: var(--slat
 .article-source-bottom a { color: var(--slate); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .article-source-bottom a:hover, .article-source-bottom a:focus-visible { color: var(--auburn); }
 figure {
+    display: block;
+    width: 100%;
     margin: 20px 0;
+    float: none;
     text-align: center;
-    column-span: all; /* Biar gambar selebar kolom koran */
     break-inside: avoid;
 }
 figcaption {
@@ -619,4 +617,17 @@ figcaption {
     color: #335C67;
     font-style: italic;
     margin-top: 5px;
+}
+
+h1, .article-title {
+    font-size: clamp(2rem, 5vw, 3.5rem) !important;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin-bottom: 10px;
+}
+
+/* Preserve the oversized wordmark on the homepage. */
+.wordmark {
+    font-size: clamp(5rem, 18vw, 14rem) !important;
 }
