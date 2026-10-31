@@ -631,3 +631,32 @@ h1, .article-title {
 .wordmark {
     font-size: clamp(5rem, 18vw, 14rem) !important;
 }
+
+@media screen and (max-width: 768px) {
+    /* 1. Paksa artikel jadi 1 kolom lurus ke bawah */
+    .newspaper-layout {
+        column-count: 1 !important;
+        column-gap: 0 !important;
+        column-rule: none !important;
+        text-align: left !important; /* Hilangkan justify agar teks tidak renggang */
+    }
+
+    /* 2. Kecilin ukuran judul di HP */
+    h1, .article-title {
+        font-size: 2.2rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* 3. Sesuaikan tinggi gambar di HP (jangan 400px) */
+    .article-image {
+        height: 250px !important;
+        max-height: 250px !important;
+        object-fit: cover !important;
+    }
+
+    /* 4. Kecilin Drop Cap di HP */
+    .drop-cap::first-letter {
+        font-size: 3.5rem !important;
+        line-height: 0.9 !important;
+    }
+}
