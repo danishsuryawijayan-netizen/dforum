@@ -243,37 +243,64 @@ document.querySelectorAll(".ioc-list .ioc-item dd").forEach((valueNode) => {
   }
 });
 
-// Filter all homepage report cards, including news cards added after fetch.
+// Filter homepage report cards by category and search query, including dynamic news cards.
 const articleSearch = document.querySelector("#article-search");
 const articleGrid = document.querySelector("#article-grid");
 const searchStatus = document.querySelector("#search-status");
+const categoryFilterLinks = document.querySelectorAll(".main-nav [data-filter]");
+let activeCategoryFilter = document.querySelector(".main-nav [data-filter].active")?.dataset.filter || "all";
 
 function filterArticleCards() {
-  if (!articleSearch || !articleGrid) return;
+  if (!articleGrid) return;
 
-  const query = articleSearch.value.trim().toLocaleLowerCase("id-ID");
+  const query = articleSearch?.value.trim().toLocaleLowerCase("id-ID") || "";
+  const selectedFilter = activeCategoryFilter.toLocaleUpperCase("id-ID");
   const articleCards = Array.from(articleGrid.querySelectorAll(".article-card"));
   let visibleCount = 0;
 
   articleCards.forEach((card) => {
-    const matches = card.textContent.toLocaleLowerCase("id-ID").includes(query);
+    const category = (card.dataset.category || "").trim().toLocaleUpperCase("id-ID");
+    const matchesCategory = activeCategoryFilter === "all" || category === selectedFilter;
+    const matchesSearch = card.textContent.toLocaleLowerCase("id-ID").includes(query);
+    const matches = matchesCategory && matchesSearch;
     card.classList.toggle("is-search-hidden", !matches);
     if (matches) visibleCount += 1;
   });
 
   const emptyMessage = articleGrid.querySelector(".news-empty");
-  if (emptyMessage) emptyMessage.hidden = Boolean(query);
+  if (emptyMessage) {
+    emptyMessage.hidden = Boolean(query) || !(selectedFilter === "ALL" || selectedFilter === "BERITA");
+  }
   if (searchStatus) {
-    searchStatus.textContent = query
+    searchStatus.textContent = query || activeCategoryFilter !== "all"
       ? `${visibleCount} laporan cocok.`
       : `${visibleCount} laporan tersedia.`;
   }
 }
 
-if (articleSearch && articleGrid) {
+categoryFilterLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    activeCategoryFilter = link.dataset.filter || "all";
+
+    categoryFilterLinks.forEach((item) => {
+      const isActive = item === link;
+      item.classList.toggle("active", isActive);
+      if (isActive) {
+        item.setAttribute("aria-current", "true");
+      } else {
+        item.removeAttribute("aria-current");
+      }
+    });
+
+    filterArticleCards();
+  });
+});
+
+if (articleSearch) {
   articleSearch.addEventListener("input", filterArticleCards);
-  filterArticleCards();
 }
+filterArticleCards();
 
 // One counted visit per browser tab session. Later page loads read the same total.
 const visitorCounter = document.querySelector("[data-visitor-counter]");
@@ -347,6 +374,7 @@ function buatKartuBerita(berita) {
 
   const card = document.createElement("article");
   card.className = "article-card berita-card";
+  card.dataset.category = (kategori || "BERITA").toLocaleUpperCase("id-ID");
 
   const topline = document.createElement("div");
   topline.className = "card-topline";

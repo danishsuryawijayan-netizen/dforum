@@ -1,18 +1,10 @@
 [
   {
-    "judul": "Kerentanan Kritis Ditemukan di PHP, Jutaan Server Terancam",
-    "tanggal": "31 Oktober 2026",
+    "judul": "KASUS BINANCE: Laptop Karyawan Jadi Celah, Rp 114 Triliun Ambyar dalam 20 Menit",
+    "tanggal": "30 Oktober 2026",
     "kategori": "BERITA",
-    "link": "berita/php-jebol.html",
-    "sumber": "BleepingComputer",
-    "link_sumber": "https://www.bleepingcomputer.com/"
-  },
-  {
-    "judul": "Sindikat Ransomware Rusia Berhasil Ditangkap FBI",
-    "tanggal": "1 November 2026",
-    "kategori": "BERITA",
-    "link": "berita/ransomware-rusia.html",
-    "sumber": "The Hacker News",
-    "link_sumber": "https://thehackernews.com/"
+    "link": "berita/binance-hack.html",
+    "sumber": "Kompas",
+    "link_sumber": "https://money.kompas.com/read/2026/10/30/154238826/ini-langkah-binance-usai-dibobol-rp-114-triliun?page=2"
   }
 ]
