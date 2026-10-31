@@ -63,6 +63,7 @@ button { font: inherit; }
   padding-block: clamp(1.2rem, 3vw, 2.8rem) 1.5rem;
 }
 .masthead {
+  position: relative;
   padding: 0 0 clamp(1.3rem, 3vw, 2.4rem);
   border-bottom: 4px solid var(--auburn);
   text-align: center;
@@ -84,6 +85,7 @@ button { font: inherit; }
 .masthead-topline p, .section-heading p, .site-footer p { margin: 0; }
 .masthead-credit { color: var(--slate); letter-spacing: .04em; }
 .masthead-tools { display: flex; align-items: center; gap: .65rem; }
+.home-page .masthead-tools { position: absolute; top: .35rem; right: 0; }
 .theme-toggle {
   display: inline-grid;
   width: 2.5rem;
@@ -117,11 +119,20 @@ button { font: inherit; }
   letter-spacing: -.055em;
   line-height: .88;
 }
+.home-page .wordmark { font-size: clamp(3.2rem, 10vw, 7rem) !important; }
 .masthead-subtitle {
   margin: clamp(.8rem, 2vw, 1.4rem) 0 0;
   color: var(--slate);
   font-size: clamp(1rem, 2vw, 1.55rem);
   font-weight: 700;
+}
+.site-purpose {
+  max-width: 60rem;
+  margin: 1.2rem auto 0;
+  color: var(--slate);
+  font-size: clamp(.92rem, 1.4vw, 1.05rem);
+  line-height: 1.65;
+  text-align: center;
 }
 .warning-banner {
   display: flex;
@@ -464,8 +475,8 @@ body.dark-mode .theme-toggle { background: var(--paper-white); color: var(--slat
 }
 @media (max-width: 600px) {
   .page-shell { width: min(100% - 1.5rem, 40rem); padding-top: 1rem; }
-  .masthead-topline { font-size: .64rem; }
-  .wordmark { font-size: clamp(4.3rem, 22vw, 7.8rem); }
+  .home-page .wordmark { font-size: clamp(3rem, 12vw, 4.2rem) !important; }
+  .site-purpose { margin-top: 1rem; text-align: left; }
   .warning-banner { align-items: flex-start; flex-direction: column; gap: .55rem; text-align: left; }
   .main-nav { justify-content: flex-start; column-gap: 1rem; row-gap: .15rem; }
   .nav-link { font-size: .92rem; }

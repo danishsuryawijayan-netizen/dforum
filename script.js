@@ -248,40 +248,41 @@ const articleSearch = document.querySelector("#article-search");
 const articleGrid = document.querySelector("#article-grid");
 const searchStatus = document.querySelector("#search-status");
 const categoryFilterLinks = document.querySelectorAll(".main-nav [data-filter]");
-let activeCategoryFilter = document.querySelector(".main-nav [data-filter].active")?.dataset.filter || "all";
+let activeCategoryFilter = null;
 
 function filterArticleCards() {
   if (!articleGrid) return;
 
   const query = articleSearch?.value.trim().toLocaleLowerCase("id-ID") || "";
-  const selectedFilter = activeCategoryFilter.toLocaleUpperCase("id-ID");
+  const selectedFilter = activeCategoryFilter?.toLocaleUpperCase("id-ID") || "";
+  const hasSelection = Boolean(query || activeCategoryFilter);
   const articleCards = Array.from(articleGrid.querySelectorAll(".article-card"));
   let visibleCount = 0;
 
   articleCards.forEach((card) => {
     const category = (card.dataset.category || "").trim().toLocaleUpperCase("id-ID");
-    const matchesCategory = activeCategoryFilter === "all" || category === selectedFilter;
+    const matchesCategory = !activeCategoryFilter || category === selectedFilter;
     const matchesSearch = card.textContent.toLocaleLowerCase("id-ID").includes(query);
-    const matches = matchesCategory && matchesSearch;
+    const matches = hasSelection && matchesCategory && matchesSearch;
     card.classList.toggle("is-search-hidden", !matches);
     if (matches) visibleCount += 1;
   });
 
   const emptyMessage = articleGrid.querySelector(".news-empty");
   if (emptyMessage) {
-    emptyMessage.hidden = Boolean(query) || !(selectedFilter === "ALL" || selectedFilter === "BERITA");
+    emptyMessage.hidden = Boolean(query) || activeCategoryFilter !== "BERITA";
   }
   if (searchStatus) {
-    searchStatus.textContent = query || activeCategoryFilter !== "all"
+    searchStatus.textContent = hasSelection
       ? `${visibleCount} laporan cocok.`
-      : `${visibleCount} laporan tersedia.`;
+      : "Pilih kategori atau cari dossier.";
   }
 }
 
 categoryFilterLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
-    activeCategoryFilter = link.dataset.filter || "all";
+    activeCategoryFilter = link.dataset.filter || null;
 
     categoryFilterLinks.forEach((item) => {
       const isActive = item === link;
@@ -373,7 +374,7 @@ function buatKartuBerita(berita) {
   if (tujuan.origin !== baseUrl.origin || !tujuan.pathname.startsWith(pathBerita)) return null;
 
   const card = document.createElement("article");
-  card.className = "article-card berita-card";
+  card.className = "article-card berita-card is-search-hidden";
   card.dataset.category = (kategori || "BERITA").toLocaleUpperCase("id-ID");
 
   const topline = document.createElement("div");

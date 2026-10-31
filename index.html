@@ -9,83 +9,67 @@
     <title>DFORUM — Laporan Keamanan Siber</title>
     <link rel="preload" href="assets/font/chuck_noon/Chuck%20Noon.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="assets/font/AA_typewriter.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="style.css?v=5" />
+    <link rel="stylesheet" href="style.css?v=6" />
   </head>
-  <body>
+  <body class="home-page">
     <div class="page-shell">
       <header class="masthead">
-        <div class="masthead-topline">
-          <p class="publication-mark">LAPORAN ANALISIS MALWARE</p>
-          <div class="masthead-tools">
-            <p class="masthead-credit">©dforum</p>
-            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Aktifkan mode gelap" aria-pressed="false" title="Aktifkan mode gelap">
-              <span class="theme-icon" aria-hidden="true">☾</span>
-            </button>
-          </div>
-        </div>
         <h1 class="wordmark">DFORUM</h1>
-        <p class="masthead-subtitle">Laporan Siber: Tegas, Terukur, Tanpa Basa-Basi</p>
+        <p class="masthead-subtitle">Laporan Analisis Virus</p>
+        <div class="masthead-tools">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Aktifkan mode gelap" aria-pressed="false" title="Aktifkan mode gelap">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+        </div>
       </header>
 
-      <aside class="warning-banner" aria-label="Peringatan keamanan">
-        <span class="warning-label">PERINGATAN</span>
-        <p>AWAS! Web ini membedah malware. Jangan bego nyoba di komputer asli lo!</p>
-      </aside>
+      <p class="site-purpose">Website ini dibuat untuk membagikan pengetahuan seputar analisis malware, bahaya virus, dan edukasi keamanan siber.</p>
 
       <nav class="main-nav" aria-label="Kategori laporan">
-        <a class="nav-link active" href="#" data-filter="all" aria-current="true">SEMUA</a>
-        <a class="nav-link" href="#" data-filter="WORM &amp; BOTNET">WORM &amp; BOTNET</a>
-        <a class="nav-link" href="#" data-filter="CRYPTOMINER">CRYPTOMINER</a>
-        <a class="nav-link" href="#" data-filter="APT &amp; BACKDOOR">APT &amp; BACKDOOR</a>
-        <a class="nav-link" href="#" data-filter="BERITA">BERITA</a>
+        <a class="nav-link" href="#artikel" data-filter="WORM &amp; BOTNET">WORM &amp; BOTNET</a>
+        <a class="nav-link" href="#artikel" data-filter="CRYPTOMINER">CRYPTOMINER</a>
+        <a class="nav-link" href="#artikel" data-filter="APT &amp; BACKDOOR">APT &amp; BACKDOOR</a>
+        <a class="nav-link" href="#artikel" data-filter="BERITA">BERITA</a>
       </nav>
 
       <section class="search-bar" aria-label="Cari laporan">
         <label class="search-label" for="article-search">CARI DOSSIER</label>
         <input id="article-search" type="search" autocomplete="off" placeholder="Ketik nama malware atau kategori…" aria-controls="article-grid" />
-        <p class="search-status" id="search-status" aria-live="polite">4 laporan tersedia.</p>
+        <p class="search-status" id="search-status" aria-live="polite">Pilih kategori atau cari dossier.</p>
       </section>
 
       <main id="artikel">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">ARSIP / ANALISIS ANCAMAN</p>
-            <h2 class="section-title">Baca polanya. Jangan asal main.</h2>
-          </div>
-          <p class="section-note">DOSSIER TERPILIH · 2026</p>
-        </div>
-
         <section class="article-grid" id="article-grid" aria-label="Daftar laporan">
-          <a class="article-card" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/fritzfrog.html">
+          <a class="article-card is-search-hidden" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/fritzfrog.html">
             <div class="card-topline">
               <span class="card-index">DOSSIER 001</span>
               <span class="threat-badge threat-badge--critical">CRITICAL</span>
             </div>
             <p class="card-category">WORM &amp; BOTNET</p>
             <h2>FritzFrog</h2>
-            <p class="card-description">Bedah worm Golang yang merayap lewat SSH. Pahami ancamannya sebelum sok coba-coba.</p>
+            <p class="card-description">Worm P2P yang bikin backdoor 'node' dan ngerusak sistem login root.</p>
             <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
           </a>
 
-          <a class="article-card" data-category="CRYPTOMINER" id="xmrig" href="artikel/xmrig.html">
+          <a class="article-card is-search-hidden" data-category="CRYPTOMINER" id="xmrig" href="artikel/xmrig.html">
             <div class="card-topline">
               <span class="card-index">DOSSIER 002</span>
               <span class="threat-badge threat-badge--high">HIGH</span>
             </div>
             <p class="card-category">CRYPTOMINER</p>
             <h2>XMRig &amp; Mirai</h2>
-            <p class="card-description">Kenali penambang kripto yang menyedot tenaga mesin dan bisa menyeretnya ke jaringan bot.</p>
+            <p class="card-description">Nyedot CPU buat nambang kripto haram dan ngubah PC jadi zombie DDoS.</p>
             <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
           </a>
 
-          <a class="article-card" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/prometei.html">
+          <a class="article-card is-search-hidden" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/prometei.html">
             <div class="card-topline">
               <span class="card-index">DOSSIER 003</span>
               <span class="threat-badge threat-badge--critical">CRITICAL</span>
             </div>
             <p class="card-category">APT &amp; BACKDOOR</p>
             <h2>Prometei</h2>
-            <p class="card-description">Telusuri jejak malware modular yang menyamar dan berusaha bertahan di sistem.</p>
+            <p class="card-description">Nyuri kredensial (password) dan bertahan hidup lewat jaringan Tor.</p>
             <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
           </a>
 
@@ -119,6 +103,6 @@
         });
       }
     </script>
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
   </body>
 </html>
