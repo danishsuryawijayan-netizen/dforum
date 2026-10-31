@@ -584,14 +584,14 @@ body.dark-mode .theme-toggle { background: var(--paper-white); color: var(--slat
 /* Efek Foto Koran Jadul */
 .article-image {
     width: 100% !important;
-    max-width: 600px !important;
+    max-width: 700px !important;
     height: 300px !important; /* Kunci tinggi maksimal */
-    object-fit: contain !important; /* GANTI JADI CONTAIN AGAR GAMBAR TIDAK NGE-ZOOM */
+    object-fit: contain !important; /* Biar gambar GAK nge-zoom, proporsional */
     display: block !important;
     margin: 0 auto 10px auto !important;
     border: 2px solid #335C67;
     padding: 5px;
-    background-color: #FFF3B0; /* Samakan background dengan warna kertas */
+    background-color: #FFF3B0;
 }
 
 @media screen and (max-width: 768px) {
