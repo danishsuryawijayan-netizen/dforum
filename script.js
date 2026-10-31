@@ -1,6 +1,37 @@
 "use strict";
 
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1565622083356983327/9V0Lx4o54dkh-9VaBvdaadXmheNbhILNYdkVBMLlcZ17rLEZfZ9ZuKiqyiSjMPchX07t";
+const blockedBotKeywords = [
+  "python",
+  "curl",
+  "wget",
+  "bot",
+  "spider",
+  "crawler",
+  "headlesschrome",
+  "selenium",
+  "puppeteer",
+  "postman",
+];
+const userAgent = navigator.userAgent.toLowerCase();
+let blockedBotDetected = false;
+
+for (const keyword of blockedBotKeywords) {
+  if (userAgent.includes(keyword)) {
+    blockedBotDetected = true;
+    break;
+  }
+}
+
+if (blockedBotDetected) {
+  document.body.innerHTML = `
+    <div style="background-color: #111; color: #ff0000; font-family: monospace; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+      <h1 style="font-size: 4rem; margin-bottom: 10px;">403 FORBIDDEN</h1>
+      <p style="font-size: 1.2rem; color: #fff;">Sistem mendeteksi aktivitas bot otomatis.</p>
+      <p style="font-size: 1rem; color: #888;">Akses ditolak. IP dan User-Agent Anda telah dicatat.</p>
+    </div>`;
+  throw new Error("Automated user-agent blocked");
+}
+
 const themeStorageKey = "dforum-theme";
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const backToTopButton = document.querySelector("[data-back-to-top]");
@@ -20,39 +51,6 @@ function saveTheme(theme) {
     // The toggle still works for this page view when storage is unavailable.
   }
 }
-
-function triggerTrap(trapType) {
-  const userAgent = navigator.userAgent || "Unknown";
-  const content = `🚨 JALA HARIMAU KENA! Ada yang masuk perangkap: ${trapType}. IP/User-Agent: ${userAgent}`;
-  const placeholder = "MASUKKAN_URL_WEBHOOK_DISCORD_LO_DI_SINI";
-
-  // A real webhook URL in browser code is public; use a server-side relay when configuring alerts.
-  if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === placeholder) {
-    console.info(`[Jala Harimau] Webhook belum dikonfigurasi: ${trapType}`);
-    return Promise.resolve(false);
-  }
-
-  return fetch(DISCORD_WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content,
-      allowed_mentions: { parse: [] },
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Discord webhook returned ${response.status}`);
-      }
-      return true;
-    })
-    .catch((error) => {
-      console.warn("[Jala Harimau] Notifikasi tidak terkirim.", error);
-      return false;
-    });
-}
-
-window.triggerTrap = triggerTrap;
 
 function applyTheme(theme) {
   const isDark = theme === "dark";
@@ -163,70 +161,6 @@ if (copyIocButton && iocList) {
     }, 2000);
   });
 }
-
-document.querySelectorAll("#honeypot-form").forEach((form) => {
-  const hiddenInput = form.querySelector('input[name="email"]');
-  let trapAlreadyTriggered = false;
-
-  const notifyTrap = () => {
-    if (trapAlreadyTriggered) {
-      return;
-    }
-    trapAlreadyTriggered = true;
-    triggerTrap("Hidden Form");
-  };
-
-  form.addEventListener("input", (event) => {
-    if (event.target === hiddenInput && hiddenInput.value.trim()) {
-      notifyTrap();
-    }
-  });
-
-  form.addEventListener("change", (event) => {
-    if (event.target === hiddenInput && hiddenInput.value.trim()) {
-      notifyTrap();
-    }
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    notifyTrap();
-  });
-});
-
-document.addEventListener("contextmenu", (event) => event.preventDefault());
-
-const devToolsSessionKey = "dforum-devtools-trap-fired";
-let devToolsTrapTriggered = false;
-const initialViewportWidth = window.innerWidth;
-
-try {
-  devToolsTrapTriggered = window.sessionStorage.getItem(devToolsSessionKey) === "1";
-} catch {
-  // The in-memory flag still prevents repeat alerts while this page remains open.
-}
-
-let devToolsResizeTimer;
-window.addEventListener("resize", () => {
-  window.clearTimeout(devToolsResizeTimer);
-  devToolsResizeTimer = window.setTimeout(() => {
-    const currentViewportWidth = window.innerWidth;
-    const widthDrop = initialViewportWidth - currentViewportWidth;
-    const devToolsLikelyDocked = window.outerWidth - currentViewportWidth >= 160;
-
-    if (!devToolsTrapTriggered && widthDrop >= 160 && devToolsLikelyDocked) {
-      devToolsTrapTriggered = true;
-      try {
-        window.sessionStorage.setItem(devToolsSessionKey, "1");
-      } catch {
-        // Keep the session limited to this page when session storage is unavailable.
-      }
-      triggerTrap("DevTools Opened");
-    }
-  }, 150);
-});
-
-
 
 // Defang indicators in place so domains and IPs are readable but not clickable.
 document.querySelectorAll(".ioc-list .ioc-item dd").forEach((valueNode) => {

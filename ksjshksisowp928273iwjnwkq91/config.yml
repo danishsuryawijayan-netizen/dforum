@@ -1,0 +1,36 @@
+backend:
+  name: github
+  repo: danishsuryawijayan-netizen/dforum
+  branch: master
+  base_url: https://dforum-nine.vercel.app
+  auth_endpoint: api/auth
+
+media_folder: "assets/img"
+public_folder: "/assets/img"
+
+collections:
+  - name: "artikel"
+    label: "Laporan Malware"
+    folder: "artikel"
+    create: true
+    extension: "md"
+    slug: "{{slug}}"
+    fields:
+      - {label: "Judul", name: "title", widget: "string"}
+      - {label: "Tanggal", name: "date", widget: "datetime"}
+      - {label: "Kategori (Tag)", name: "category", widget: "select", options: ["WORM & BOTNET", "CRYPTOMINER", "APT & BACKDOOR"]}
+      - {label: "Isi Laporan", name: "body", widget: "markdown"}
+
+  - name: "berita"
+    label: "Berita Siber"
+    folder: "berita"
+    create: true
+    extension: "md"
+    slug: "{{slug}}"
+    fields:
+      - {label: "Judul", name: "title", widget: "string"}
+      - {label: "Tanggal", name: "date", widget: "datetime"}
+      - {label: "Kategori (Tag)", name: "category", widget: "select", options: ["BERITA"]}
+      - {label: "Sumber", name: "source", widget: "string"}
+      - {label: "Link Sumber", name: "source_url", widget: "string"}
+      - {label: "Isi Berita", name: "body", widget: "markdown"}
