@@ -111,22 +111,14 @@ button { font: inherit; }
   outline: 3px solid var(--auburn);
   outline-offset: 4px;
 }
-.header-layout {
-  position: relative;
+.header-brand {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  min-height: 120px;
-}
-.logo-container {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
 }
 .brand-logo {
   width: 90px;
@@ -136,8 +128,7 @@ button { font: inherit; }
   box-shadow: 2px 2px 0 #335C67;
 }
 .title-container {
-  text-align: center;
-  margin: 0 auto;
+  text-align: left;
 }
 .site-title {
   margin: clamp(1.1rem, 3vw, 2rem) 0 0;
@@ -672,22 +663,19 @@ h1, .article-title {
 }
 
 @media screen and (max-width: 768px) {
-    .header-layout {
-        display: flex;
+    .header-brand {
         flex-direction: column;
-        padding-top: 20px;
-    }
-
-    .logo-container {
-        position: static;
-        transform: none;
-        margin-bottom: 15px;
+        gap: 10px;
     }
 
     .brand-logo {
         width: 70px;
         height: 70px;
         border-radius: 16px;
+    }
+
+    .title-container {
+        text-align: center;
     }
 
     .home-page .title-container h1.site-title {
