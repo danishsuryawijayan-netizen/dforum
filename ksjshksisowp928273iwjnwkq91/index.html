@@ -9,6 +9,36 @@
       #nc-root { min-height: 100dvh; }
       /* hilangkan lebar minimum kontainer utama Decap */
       [class*="AppMainContainer"] { min-width: 0 !important; max-width: 100% !important; }
+
+      /* Mencegah scroll horizontal di seluruh halaman */
+      html, body {
+        overflow-x: hidden !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+      }
+
+      /* Paksa semua wadah input dan editor agar lebarnya menyesuaikan layar */
+      [class*="ControlContainer"],
+      [class*="Editor"],
+      [class*="RichText"],
+      [class*="Field"],
+      [data-slate-editor="true"],
+      [data-testid="cms-editor"] {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        word-wrap: break-word !important;
+        white-space: pre-wrap !important; /* Memaksa teks turun ke bawah */
+      }
+
+      /* Toolbar editor juga jangan sampai memanjang */
+      [class*="Toolbar"] {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
     </style>
   </head>
   <body>
