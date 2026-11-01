@@ -80,9 +80,19 @@
       }
 
       function renderImage(frontmatter) {
-        if (typeof frontmatter.image !== "string" || !frontmatter.image.trim()) return;
+        const imagePath = typeof frontmatter.gambar === "string" && frontmatter.gambar.trim()
+          ? frontmatter.gambar.trim()
+          : typeof frontmatter.image === "string"
+            ? frontmatter.image.trim()
+            : "";
+        if (!imagePath) return;
         try {
-          const imageUrl = new URL(frontmatter.image, window.location.origin + "/");
+          const publicPath = imagePath.startsWith("/assets/img/")
+            ? imagePath
+            : imagePath.startsWith("assets/img/")
+              ? "/" + imagePath
+              : "/assets/img/" + imagePath.replace(/^\/+/, "");
+          const imageUrl = new URL(publicPath, window.location.origin);
           if (imageUrl.origin !== window.location.origin || !imageUrl.pathname.startsWith("/assets/img/")) return;
 
           const figure = document.createElement("figure");
@@ -100,6 +110,36 @@
         } catch {
           // Lewati gambar dengan path yang tidak valid.
         }
+      }
+
+      function renderSource(frontmatter) {
+        const source = typeof frontmatter.source === "string" ? frontmatter.source.trim() : "";
+        const sourceUrl = typeof frontmatter.source_url === "string" ? frontmatter.source_url.trim() : "";
+        if (!source && !sourceUrl) return;
+
+        const paragraph = document.createElement("p");
+        const label = document.createElement("strong");
+        label.textContent = "Sumber: ";
+        paragraph.append(label);
+
+        if (sourceUrl) {
+          try {
+            const url = new URL(sourceUrl);
+            if (url.protocol === "https:" || url.protocol === "http:") {
+              const link = document.createElement("a");
+              link.href = url.href;
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              link.textContent = source || url.hostname;
+              paragraph.append(link);
+            }
+          } catch {
+            // Tampilkan nama sumber tanpa tautan jika URL tidak valid.
+          }
+        }
+
+        if (!paragraph.querySelector("a")) paragraph.append(document.createTextNode(source || "Tidak dicantumkan"));
+        sourceElement.append(paragraph);
       }
 
       function renderMarkdown(rawMarkdown) {
@@ -125,6 +165,7 @@
         metaElement.textContent = "Analis: Redaksi DForum | Tanggal: " + date + " | Kategori: " + category;
         renderImage(frontmatter);
         contentElement.innerHTML = window.marked.parse(match[2]);
+        renderSource(frontmatter);
       }
 
       async function loadArticle() {

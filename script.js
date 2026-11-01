@@ -293,9 +293,12 @@ function buatKartuBerita(berita) {
 
   const namaFileBerita = tujuan.pathname.slice(pathBerita.length);
   if (!namaFileBerita || namaFileBerita.includes("/")) return null;
-  const idBerita = namaFileBerita.replace(/\.(?:html|md)$/i, "");
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(idBerita)) return null;
+  const fileMatch = namaFileBerita.match(/^([a-z0-9]+(?:-[a-z0-9]+)*)\.(?:html|md)$/i);
+  if (!fileMatch) return null;
+  const idBerita = fileMatch[1];
 
+  // CMS news entries may point to either a legacy HTML page or a Markdown file.
+  // Both open through the shared template using the filename as its `id`.
   const halamanBerita = new URL("berita/template.html", baseUrl);
   halamanBerita.searchParams.set("id", idBerita);
 

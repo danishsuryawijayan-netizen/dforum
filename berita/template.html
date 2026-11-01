@@ -80,9 +80,19 @@
       }
 
       function renderImage(frontmatter) {
-        if (typeof frontmatter.image !== "string" || !frontmatter.image.trim()) return;
+        const imagePath = typeof frontmatter.gambar === "string" && frontmatter.gambar.trim()
+          ? frontmatter.gambar.trim()
+          : typeof frontmatter.image === "string"
+            ? frontmatter.image.trim()
+            : "";
+        if (!imagePath) return;
         try {
-          const imageUrl = new URL(frontmatter.image, window.location.origin + "/");
+          const publicPath = imagePath.startsWith("/assets/img/")
+            ? imagePath
+            : imagePath.startsWith("assets/img/")
+              ? "/" + imagePath
+              : "/assets/img/" + imagePath.replace(/^\/+/, "");
+          const imageUrl = new URL(publicPath, window.location.origin);
           if (imageUrl.origin !== window.location.origin || !imageUrl.pathname.startsWith("/assets/img/")) return;
 
           const figure = document.createElement("figure");
