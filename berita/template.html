@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Berita keamanan siber DForum." />
+  <title>Memuat Berita — DFORUM</title>
+  <link rel="icon" type="image/png" href="../assets/img/logo.png" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="../assets/font/chuck_noon/Chuck%20Noon.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="../assets/font/AA_typewriter.ttf" as="font" type="font/ttf" crossorigin />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <link rel="stylesheet" href="../style.css?v=11" />
+</head>
+<body>
+  <div class="page-shell article-shell">
+    <header class="article-header">
+      <div class="article-utility">
+        <p>©dforum</p>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Aktifkan mode gelap" aria-pressed="false" title="Aktifkan mode gelap">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+        </button>
+      </div>
+      <a class="back-link" href="../index.html">← KEMBALI KE BERANDA</a>
+      <p class="article-kicker" id="article-kicker">BERITA SIBER</p>
+      <h1 id="article-title">Memuat berita...</h1>
+      <p class="article-meta" id="article-meta"></p>
+    </header>
+
+    <main class="article-layout newspaper-page">
+      <article class="article-body">
+        <div id="article-media"></div>
+        <div class="newspaper-layout" id="newspaper-content" aria-live="polite">
+          <p>Memuat isi berita...</p>
+        </div>
+        <div class="article-source-bottom" id="article-source"></div>
+      </article>
+    </main>
+
+    <footer class="site-footer article-footer">
+      <p>©dforum - Independent Malware Researcher</p>
+    </footer>
+  </div>
+
+  <button class="back-to-top" type="button" data-back-to-top aria-label="Kembali ke atas" title="Kembali ke atas">
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <script src="../script.js?v=4"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id") || "";
+      const titleElement = document.getElementById("article-title");
+      const kickerElement = document.getElementById("article-kicker");
+      const metaElement = document.getElementById("article-meta");
+      const contentElement = document.getElementById("newspaper-content");
+      const mediaElement = document.getElementById("article-media");
+      const sourceElement = document.getElementById("article-source");
+
+      function showError(message) {
+        const paragraph = document.createElement("p");
+        paragraph.setAttribute("role", "alert");
+        paragraph.textContent = message;
+        contentElement.replaceChildren(paragraph);
+      }
+
+      function formatDate(value) {
+        if (!value) return "Tanggal tidak tersedia";
+        const date = value instanceof Date ? value : new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return new Intl.DateTimeFormat("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          timeZone: "Asia/Jakarta"
+        }).format(date);
+      }
+
+      function renderImage(frontmatter) {
+        if (typeof frontmatter.image !== "string" || !frontmatter.image.trim()) return;
+        try {
+          const imageUrl = new URL(frontmatter.image, window.location.origin + "/");
+          if (imageUrl.origin !== window.location.origin || !imageUrl.pathname.startsWith("/assets/img/")) return;
+
+          const figure = document.createElement("figure");
+          const image = document.createElement("img");
+          image.className = "article-image";
+          image.src = imageUrl.href;
+          image.alt = typeof frontmatter.image_alt === "string" ? frontmatter.image_alt : String(frontmatter.title || "Ilustrasi berita siber");
+          figure.append(image);
+          if (typeof frontmatter.image_caption === "string" && frontmatter.image_caption.trim()) {
+            const caption = document.createElement("figcaption");
+            caption.textContent = frontmatter.image_caption;
+            figure.append(caption);
+          }
+          mediaElement.append(figure);
+        } catch {
+          // Lewati gambar dengan path yang tidak valid.
+        }
+      }
+
+      function renderSource(frontmatter) {
+        const source = typeof frontmatter.source === "string" ? frontmatter.source.trim() : "";
+        const sourceUrl = typeof frontmatter.source_url === "string" ? frontmatter.source_url.trim() : "";
+        if (!source && !sourceUrl) return;
+
+        const paragraph = document.createElement("p");
+        const label = document.createElement("strong");
+        label.textContent = "Sumber Berita: ";
+        paragraph.append(label);
+
+        if (sourceUrl) {
+          try {
+            const url = new URL(sourceUrl);
+            if (url.protocol === "https:" || url.protocol === "http:") {
+              const link = document.createElement("a");
+              link.href = url.href;
+              link.target = "_blank";
+              link.rel = "noopener noreferrer";
+              link.textContent = source || url.hostname;
+              paragraph.append(link);
+            }
+          } catch {
+            // Tampilkan nama sumber tanpa tautan jika URL tidak valid.
+          }
+        }
+
+        if (!paragraph.querySelector("a")) paragraph.append(document.createTextNode(source || "Tidak dicantumkan"));
+        sourceElement.append(paragraph);
+      }
+
+      function renderMarkdown(rawMarkdown) {
+        if (!window.marked || typeof window.marked.parse !== "function" || !window.jsyaml || typeof window.jsyaml.load !== "function") {
+          throw new Error("Library Markdown atau YAML gagal dimuat.");
+        }
+
+        const match = rawMarkdown.replace(/^\uFEFF/, "").match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)([\s\S]*)$/);
+        if (!match) throw new Error("Format YAML frontmatter tidak ditemukan.");
+
+        const frontmatter = window.jsyaml.load(match[1]) || {};
+        if (!frontmatter || typeof frontmatter !== "object" || Array.isArray(frontmatter)) {
+          throw new Error("YAML frontmatter harus berupa objek.");
+        }
+
+        const title = typeof frontmatter.title === "string" && frontmatter.title.trim() ? frontmatter.title.trim() : id;
+        const category = typeof frontmatter.category === "string" && frontmatter.category.trim() ? frontmatter.category.trim() : "BERITA";
+        const date = formatDate(frontmatter.date);
+
+        document.title = title + " — DFORUM";
+        titleElement.textContent = title;
+        kickerElement.textContent = category === "BERITA" ? "BERITA SIBER" : category;
+        metaElement.textContent = "Oleh: Redaksi DForum | Tanggal: " + date + " | Kategori: " + category;
+        renderImage(frontmatter);
+        contentElement.innerHTML = window.marked.parse(match[2]);
+        renderSource(frontmatter);
+      }
+
+      async function loadNews() {
+        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(id)) {
+          showError("ID berita tidak valid. Buka berita melalui kartu di halaman utama.");
+          return;
+        }
+
+        try {
+          const response = await fetch("./" + encodeURIComponent(id) + ".md", { cache: "no-cache" });
+          if (!response.ok) {
+            if (response.status === 404) {
+              const legacyUrl = "./" + encodeURIComponent(id) + ".html";
+              const legacyResponse = await fetch(legacyUrl, { method: "HEAD", cache: "no-cache" });
+              if (legacyResponse.ok) {
+                window.location.replace(legacyUrl);
+                return;
+              }
+            }
+            throw new Error("File berita gagal dimuat (HTTP " + response.status + ").");
+          }
+
+          renderMarkdown(await response.text());
+        } catch (error) {
+          showError(error instanceof Error ? error.message : "Berita gagal dimuat.");
+        }
+      }
+
+      loadNews();
+    })();
+  </script>
+</body>
+</html>

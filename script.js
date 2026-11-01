@@ -269,7 +269,15 @@ function buatKartuBerita(berita) {
   const pathBerita = new URL("berita/", baseUrl).pathname;
   if (tujuan.origin !== baseUrl.origin || !tujuan.pathname.startsWith(pathBerita)) return null;
 
-  const defaultGambar = new URL("assets/img/binance.jpg", baseUrl);
+  const namaFileBerita = tujuan.pathname.slice(pathBerita.length);
+  if (!namaFileBerita || namaFileBerita.includes("/")) return null;
+  const idBerita = namaFileBerita.replace(/\.(?:html|md)$/i, "");
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(idBerita)) return null;
+
+  const halamanBerita = new URL("berita/template.html", baseUrl);
+  halamanBerita.searchParams.set("id", idBerita);
+
+  const defaultGambar = new URL("assets/img/server.jpg", baseUrl);
   let urlGambar = defaultGambar;
   if (gambar) {
     try {
@@ -313,7 +321,7 @@ function buatKartuBerita(berita) {
 
   const action = document.createElement("a");
   action.className = "btn-baca";
-  action.href = tujuan.href;
+  action.href = halamanBerita.href;
   action.textContent = "BACA BERITA →";
 
   content.append(labelKategori, heading, date, sourceLine, action);

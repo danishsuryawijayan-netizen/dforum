@@ -6,5 +6,13 @@
     "link": "berita/binance-hack.html",
     "sumber": "Kompas",
     "link_sumber": "https://money.kompas.com/read/2026/10/30/154238826/ini-langkah-binance-usai-dibobol-rp-114-triliun?page=2"
+  },
+  {
+    "judul": "Chainalysis Konfirmasi Sistem Internal Disusupi, Data Identitas Pelanggan Terpapar",
+    "tanggal": "31 Oktober 2026",
+    "kategori": "BERITA",
+    "link": "berita/chainalysis-konfirmasi-sistem-internal-disusupi-data-identitas-pelanggan-terpapar.md",
+    "sumber": "The Hacker News",
+    "link_sumber": "https://thehackernews.com/2026/10/chainalysis-confirms-instusion-into.html"
   }
 ]

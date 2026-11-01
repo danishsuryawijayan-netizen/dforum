@@ -7,6 +7,8 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="description" content="DFORUM — laporan analisis malware dan keamanan siber." />
     <title>DFORUM — Laporan Keamanan Siber</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <!-- Cloudflare Turnstile Placeholder -->
     <!-- Nanti jika sudah punya Site Key, buka komentar script di bawah ini -->
     <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
@@ -50,7 +52,7 @@
 
       <main id="artikel">
         <section class="article-grid" id="article-grid" aria-label="Daftar laporan">
-          <a class="article-card is-search-hidden" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/fritzfrog.html">
+          <a class="article-card is-search-hidden" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/template.html?id=fritzfrog">
             <div class="card-topline">
               <span class="card-index">DOSSIER 001</span>
               <span class="threat-badge threat-badge--critical">CRITICAL</span>
@@ -61,7 +63,7 @@
             <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
           </a>
 
-          <a class="article-card is-search-hidden" data-category="CRYPTOMINER" id="xmrig" href="artikel/xmrig.html">
+          <a class="article-card is-search-hidden" data-category="CRYPTOMINER" id="xmrig" href="artikel/template.html?id=xmrig">
             <div class="card-topline">
               <span class="card-index">DOSSIER 002</span>
               <span class="threat-badge threat-badge--high">HIGH</span>
@@ -72,7 +74,7 @@
             <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
           </a>
 
-          <a class="article-card is-search-hidden" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/prometei.html">
+          <a class="article-card is-search-hidden" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/template.html?id=prometei">
             <div class="card-topline">
               <span class="card-index">DOSSIER 003</span>
               <span class="threat-badge threat-badge--critical">CRITICAL</span>
