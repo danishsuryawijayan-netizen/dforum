@@ -40,6 +40,7 @@
                 { label: "Judul", name: "title", widget: "string" },
                 { label: "Tanggal", name: "date", widget: "datetime" },
                 { label: "Kategori (Tag)", name: "category", widget: "select", options: ["WORM & BOTNET", "CRYPTOMINER", "APT & BACKDOOR"] },
+                { label: "Gambar Thumbnail", name: "gambar", widget: "image", required: false, media_folder: "/assets/img", public_folder: "/assets/img" },
                 { label: "Isi Laporan", name: "body", widget: "markdown" }
               ]
             },
@@ -56,6 +57,7 @@
                 { label: "Kategori (Tag)", name: "category", widget: "select", options: ["BERITA"] },
                 { label: "Sumber", name: "source", widget: "string" },
                 { label: "Link Sumber", name: "source_url", widget: "string" },
+                { label: "Gambar Thumbnail", name: "gambar", widget: "image", required: false, media_folder: "/assets/img", public_folder: "/assets/img" },
                 { label: "Isi Berita", name: "body", widget: "markdown" }
               ]
             }
