@@ -65,6 +65,28 @@
         text-align: left !important;
         width: 100% !important;
       }
+
+      /* Khusus tampilan HP */
+      @media screen and (max-width: 768px) {
+        /* Targetkan container header/topbar editor agar tidak sticky */
+        header,
+        [class*="TopBar"],
+        [class*="AppHeader"],
+        [class*="EditorHeader"],
+        [class*="ToolbarContainer"] {
+          position: relative !important; /* Ubah dari sticky/fixed jadi relative */
+          top: auto !important;
+          z-index: 1 !important;
+          background-color: #f4f4f4 !important; /* Samakan dengan background agar menyatu */
+          border-bottom: 1px solid #ccc !important;
+        }
+
+        /* Pastikan container utama editor bisa di-scroll dengan normal */
+        [class*="EditorContainer"] {
+          padding-top: 0 !important;
+          overflow-y: visible !important;
+        }
+      }
     </style>
   </head>
   <body>
