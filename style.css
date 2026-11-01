@@ -80,19 +80,17 @@ a:focus-visible {
 /* Masthead and category navigation */
 .site-header {
   position: relative;
-  padding: 22px 0 32px;
+  padding: 14px 0 20px;
   text-align: center;
   border-bottom: 3px double var(--ink);
 }
 
 .masthead-tools {
   position: absolute;
-  top: 22px;
-  margin: 0;
-}
-
-.masthead-tools {
+  top: 50%;
   right: 0;
+  margin: 0;
+  transform: translateY(-50%);
 }
 
 .header-brand {
@@ -110,14 +108,14 @@ a:focus-visible {
   margin: 0;
   color: var(--brick);
   font-family: var(--display-font);
-  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-size: clamp(3.2rem, 8vw, 6.5rem);
   font-weight: 400;
   letter-spacing: 0.035em;
   line-height: 0.95;
 }
 
 .site-tagline {
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   color: var(--ink);
   font-size: 0.83rem;
   letter-spacing: 0.2em;
@@ -167,6 +165,10 @@ a:focus-visible {
   letter-spacing: 0.14em;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.nav-link[hidden] {
+  display: none !important;
 }
 
 .nav-link.active,
@@ -287,6 +289,14 @@ a:focus-visible {
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: 30px;
   align-items: start;
+}
+
+.newspaper-grid.is-filtered {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.side-articles[hidden] {
+  display: none !important;
 }
 
 .article-card,
@@ -444,6 +454,14 @@ figure figcaption {
   font-size: 0.92rem;
   line-height: 1.7;
   overflow-wrap: anywhere;
+}
+
+.card-date {
+  margin: -4px 0 12px;
+  color: var(--ink);
+  font-family: var(--body-font);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
 }
 
 .card-action {
@@ -849,15 +867,11 @@ figure figcaption {
   }
 
   .site-header {
-    padding: 50px 0 26px;
-  }
-
-  .masthead-tools {
-    top: 8px;
+    padding: 18px 0 22px;
   }
 
   .site-title {
-    font-size: clamp(2.6rem, 13vw, 4rem);
+    font-size: clamp(2.6rem, 13vw, 3.5rem);
   }
 
   .site-tagline {

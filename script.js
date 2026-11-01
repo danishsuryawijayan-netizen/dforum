@@ -182,7 +182,16 @@ const articleSearch = document.querySelector("#article-search");
 const articleGrid = document.querySelector("#article-grid");
 const searchStatus = document.querySelector("#search-status");
 const categoryFilterLinks = document.querySelectorAll(".main-nav [data-filter]");
+const beritaCategoryLink = Array.from(categoryFilterLinks).find(
+  (link) => (link.dataset.filter || "").trim().toLocaleUpperCase("id-ID") === "BERITA",
+);
 let activeCategoryFilter = null;
+
+if (beritaCategoryLink) beritaCategoryLink.hidden = true;
+
+function setNewsCategoryAvailability(isAvailable) {
+  if (beritaCategoryLink) beritaCategoryLink.hidden = !isAvailable;
+}
 
 function filterArticleCards() {
   if (!articleGrid) return;
@@ -208,6 +217,17 @@ function filterArticleCards() {
   if (emptyMessage) {
     emptyMessage.hidden = Boolean(query) || activeCategoryFilter !== "BERITA";
   }
+
+  const sideArticles = articleGrid.querySelector(".side-articles");
+  if (sideArticles) {
+    const hasVisibleCard = sideArticles.querySelector(
+      ".article-card:not(.is-search-hidden), .card-berita:not(.is-search-hidden)",
+    );
+    const hasVisibleMessage = sideArticles.querySelector(".news-empty:not([hidden])");
+    sideArticles.hidden = !hasVisibleCard && !hasVisibleMessage;
+  }
+  articleGrid.classList.toggle("is-filtered", hasSelection);
+
   if (searchStatus) {
     searchStatus.textContent = hasSelection
       ? `${visibleCount} laporan cocok.`
@@ -350,6 +370,9 @@ async function ambilDataBerita() {
     if (!Array.isArray(dataBerita)) throw new Error("berita.json harus berisi array");
 
     const cards = dataBerita.map(buatKartuBerita).filter(Boolean);
+    setNewsCategoryAvailability(cards.some(
+      (card) => (card.dataset.category || "").trim().toLocaleUpperCase("id-ID") === "BERITA",
+    ));
     if (cards.length) {
       container.replaceChildren(...cards);
     } else {
@@ -357,6 +380,7 @@ async function ambilDataBerita() {
     }
     filterArticleCards();
   } catch (error) {
+    setNewsCategoryAvailability(false);
     tampilkanPesanBerita(container, "Belum ada update berita siber hari ini. Balik lagi nanti.");
     filterArticleCards();
     console.warn("Berita siber gagal dimuat.", error);
