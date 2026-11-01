@@ -85,18 +85,10 @@ a:focus-visible {
   border-bottom: 3px double var(--ink);
 }
 
-.masthead-edition,
 .masthead-tools {
   position: absolute;
   top: 22px;
   margin: 0;
-}
-
-.masthead-edition {
-  left: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .masthead-tools {
@@ -104,38 +96,21 @@ a:focus-visible {
 }
 
 .header-brand {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
+  display: block;
   width: 100%;
   margin: 0 auto;
-}
-
-.brand-logo {
-  grid-column: 1;
-  justify-self: end;
-  width: 80px;
-  height: auto;
-  margin-right: 16px;
-  border: var(--rule);
-  object-fit: contain;
-}
-
-.title-container {
-  grid-column: 2;
   text-align: center;
 }
 
-.header-brand::after {
-  grid-column: 3;
-  content: "";
+.title-container {
+  text-align: center;
 }
 
 .site-title {
   margin: 0;
   color: var(--brick);
   font-family: var(--display-font);
-  font-size: clamp(4.5rem, 11vw, 9rem);
+  font-size: clamp(3.5rem, 10vw, 8rem);
   font-weight: 400;
   letter-spacing: 0.035em;
   line-height: 0.95;
@@ -877,23 +852,12 @@ figure figcaption {
     padding: 50px 0 26px;
   }
 
-  .masthead-edition {
-    top: 12px;
-    right: 42px;
-    left: 0;
-    font-size: 0.62rem;
-  }
-
   .masthead-tools {
     top: 8px;
   }
 
   .site-title {
-    font-size: clamp(3.8rem, 18vw, 6rem);
-  }
-
-  .brand-logo {
-    display: none;
+    font-size: clamp(2.6rem, 13vw, 4rem);
   }
 
   .site-tagline {
