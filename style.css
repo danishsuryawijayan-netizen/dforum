@@ -280,6 +280,14 @@ a:focus-visible {
   align-items: start;
 }
 
+body.home-page .newspaper-grid {
+  display: none !important;
+}
+
+body.home-page .newspaper-grid.grid-visible {
+  display: grid !important;
+}
+
 .newspaper-grid.is-filtered {
   grid-template-columns: 1fr;
 }

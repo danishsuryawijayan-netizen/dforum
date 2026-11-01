@@ -184,6 +184,7 @@ const articleSearch = document.querySelector("#article-search");
 const articleGrid = document.querySelector("#article-grid");
 const searchStatus = document.querySelector("#search-status");
 const categoryFilterLinks = document.querySelectorAll(".main-nav [data-filter]");
+const homeLink = document.querySelector('.main-nav .nav-link[href="index.html"]');
 const beritaCategoryLink = Array.from(categoryFilterLinks).find(
   (link) => (link.dataset.filter || "").trim().toLocaleUpperCase("id-ID") === "BERITA",
 );
@@ -229,6 +230,7 @@ function filterArticleCards() {
     sideArticles.hidden = !hasVisibleCard && !hasVisibleMessage;
   }
   articleGrid.classList.toggle("is-filtered", hasSelection);
+  articleGrid.classList.toggle("grid-visible", hasSelection);
 
   if (searchStatus) {
     searchStatus.textContent = hasSelection
@@ -254,6 +256,16 @@ categoryFilterLinks.forEach((link) => {
 
     filterArticleCards();
   });
+});
+
+homeLink?.addEventListener("click", () => {
+  activeCategoryFilter = null;
+  if (articleSearch) articleSearch.value = "";
+  categoryFilterLinks.forEach((link) => {
+    link.classList.remove("active");
+    link.removeAttribute("aria-current");
+  });
+  filterArticleCards();
 });
 
 if (articleSearch) {
