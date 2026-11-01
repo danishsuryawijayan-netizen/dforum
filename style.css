@@ -677,6 +677,7 @@ figure figcaption {
   max-width: 100%;
   height: clamp(220px, 42vw, 400px);
   max-height: 400px;
+  margin-bottom: 20px;
   border: var(--rule);
   filter: none;
   object-fit: cover;

@@ -320,8 +320,15 @@ function buatKartuBerita(berita) {
   let urlGambar = defaultGambar;
   if (gambar) {
     try {
-      const kandidatGambar = new URL(gambar, baseUrl);
-      if (kandidatGambar.origin === baseUrl.origin) urlGambar = kandidatGambar;
+      const publicPath = gambar.startsWith("/assets/img/")
+        ? gambar
+        : gambar.startsWith("assets/img/")
+          ? "/" + gambar
+          : "/assets/img/" + gambar.replace(/^\/+/, "");
+      const kandidatGambar = new URL(publicPath, baseUrl);
+      if (kandidatGambar.origin === baseUrl.origin && kandidatGambar.pathname.startsWith("/assets/img/")) {
+        urlGambar = kandidatGambar;
+      }
     } catch {
       // Use the default image when the JSON image path is invalid.
     }
