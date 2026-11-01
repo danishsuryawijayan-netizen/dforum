@@ -119,26 +119,29 @@ export default async function handler(req, res) {
   <body>
     <p>GitHub authorization complete. This window can be closed.</p>
     <script nonce="${nonce}">
-      const access_token = ${accessTokenLiteral};
+(function () {
+  const token = ${accessTokenLiteral};
+  const provider = "github";
 
-      try {
-        if (window.opener) {
-          const message = 'authorization:github:success:' + JSON.stringify({token: access_token, provider: 'github'});
-          window.opener.postMessage(message, ${targetOriginLiteral});
+  function receiveMessage(e) {
+    // Langkah 3: Kirim token setelah Decap membalas handshake
+    window.opener.postMessage(
+      "authorization:" + provider + ":success:" +
+        JSON.stringify({ token: token, provider: provider }),
+      e.origin
+    );
+    window.removeEventListener("message", receiveMessage, false);
+    setTimeout(function () { window.close(); }, 500);
+  }
 
-          // Tampilkan pesan sukses sementara sebelum ditutup
-          document.body.innerHTML = "<h3 style='color:green;'>Login Berhasil! Menutup jendela...</h3>";
-
-          // Tunda penutupan selama 1.5 detik agar window utama sempat memproses token
-          setTimeout(() => {
-            self.close();
-          }, 1500);
-        } else {
-          document.body.innerHTML = "<h3 style='color:red;'>Error: window.opener null. Browser memblokir komunikasi.</h3>";
-        }
-      } catch (err) {
-        document.body.innerHTML = "<h3 style='color:red;'>Error: " + err.message + "</h3>";
-      }
+  if (window.opener) {
+    window.addEventListener("message", receiveMessage, false);
+    // Langkah 1: Mulai handshake
+    window.opener.postMessage("authorizing:" + provider, "*");
+  } else {
+    document.body.innerHTML = "<h3 style='color:red;'>Error: window.opener null.</h3>";
+  }
+})();
     </script>
   </body>
 </html>`;
