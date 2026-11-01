@@ -165,6 +165,8 @@
         metaElement.textContent = "Oleh: Redaksi DForum | Tanggal: " + date + " | Kategori: " + category;
         renderImage(frontmatter);
         contentElement.innerHTML = window.marked.parse(match[2]);
+        const firstParagraph = contentElement.querySelector("p");
+        if (firstParagraph) firstParagraph.classList.add("drop-cap");
         renderSource(frontmatter);
       }
 
