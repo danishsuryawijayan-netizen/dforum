@@ -206,7 +206,7 @@ a:focus-visible {
   align-items: center;
   gap: 8px 18px;
   width: min(100%, 760px);
-  margin: 0 auto 26px;
+  margin: 0 auto 20px;
   padding: 10px 0 8px;
   border-top: var(--rule);
   border-bottom: var(--rule);
@@ -393,8 +393,8 @@ a:focus-visible {
 .featured-visual img {
   display: block;
   width: 100%;
-  height: clamp(260px, 34vw, 430px);
-  max-height: 430px;
+  height: clamp(220px, 32vw, 350px);
+  max-height: 350px;
   border: var(--rule);
   object-fit: cover;
 }
