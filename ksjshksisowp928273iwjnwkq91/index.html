@@ -39,6 +39,32 @@
         width: 100% !important;
         max-width: 100% !important;
       }
+
+      /* Paksa Toolbar Editor berjejer ke samping (horizontal) */
+      [class*="Toolbar"], [class*="ToolbarContainer"] {
+        display: flex !important;
+        flex-direction: row !important; /* Kunci utama: Paksa berjejer ke samping */
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        padding: 5px !important;
+      }
+
+      /* Paksa tombol-tombol di dalam toolbar agar tidak memenuhi lebar layar */
+      [class*="Toolbar"] button, [class*="Toolbar"] > div, [class*="Toolbar"] span {
+        display: inline-flex !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+        margin: 2px !important;
+      }
+
+      /* Ratakan teks isi berita ke kiri dengan padding yang pas */
+      [data-slate-editor="true"], [class*="RichText"], [class*="EditorContainer"] {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        text-align: left !important;
+        width: 100% !important;
+      }
     </style>
   </head>
   <body>
