@@ -197,7 +197,9 @@ function filterArticleCards() {
     const category = (card.dataset.category || "").trim().toLocaleUpperCase("id-ID");
     const matchesCategory = !activeCategoryFilter || category === selectedFilter;
     const matchesSearch = card.textContent.toLocaleLowerCase("id-ID").includes(query);
-    const matches = hasSelection && matchesCategory && matchesSearch;
+    // Keep the editorial grid visible on first load; filters narrow it only
+    // after the reader chooses a category or enters a search query.
+    const matches = !hasSelection || (matchesCategory && matchesSearch);
     card.classList.toggle("is-search-hidden", !matches);
     if (matches) visibleCount += 1;
   });

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#FFF3B0" />
+    <meta name="theme-color" content="#F3E9D2" />
     <link rel="manifest" href="manifest.json" />
     <meta name="description" content="DFORUM — laporan analisis malware dan keamanan siber." />
     <title>DFORUM — Laporan Keamanan Siber</title>
@@ -13,16 +13,21 @@
     <!-- Nanti jika sudah punya Site Key, buka komentar script di bawah ini -->
     <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
     <meta name="google-site-verification" content="ZjZ8lPPSImnZbILf-GXH8DastswRt1AA1orF4WH18lg" />
-    <link rel="icon" type="image/png" href="assets/img/logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="preload" href="assets/font/chuck_noon/Chuck%20Noon.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="assets/font/AA_typewriter.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="style.css?v=11" />
+    <link rel="stylesheet" href="style.css?v=17" />
   </head>
   <body class="home-page">
     <div class="page-shell">
+      <div class="newspaper-topbar">
+        <span>EDISI NO. 01</span>
+        <span>YOGYAKARTA — 2026</span>
+      </div>
       <header class="site-header">
+        <p class="masthead-edition">Independent Malware Research</p>
         <div class="header-brand">
-          <img src="assets/img/logo.png" alt="Logo DForum" class="brand-logo" />
+          <img src="logo.png" alt="Logo DForum" class="brand-logo" />
           <div class="title-container">
             <h1 class="site-title">DFORUM</h1>
             <p class="site-tagline">Laporan Analisis Virus</p>
@@ -35,8 +40,6 @@
         </div>
       </header>
 
-      <p class="site-purpose">Website ini dibuat untuk membagikan pengetahuan seputar analisis malware, bahaya virus, dan edukasi keamanan siber.</p>
-
       <nav class="main-nav" aria-label="Kategori laporan">
         <a class="nav-link" href="#artikel" data-filter="WORM &amp; BOTNET">WORM &amp; BOTNET</a>
         <a class="nav-link" href="#artikel" data-filter="CRYPTOMINER">CRYPTOMINER</a>
@@ -44,48 +47,72 @@
         <a class="nav-link" href="#artikel" data-filter="BERITA">BERITA</a>
       </nav>
 
+      <p class="site-purpose">Website ini dibuat untuk membagikan pengetahuan seputar analisis malware, bahaya virus, dan edukasi keamanan siber.</p>
+
       <section class="search-bar" aria-label="Cari laporan">
         <label class="search-label" for="article-search">CARI DOSSIER</label>
         <input id="article-search" type="search" autocomplete="off" placeholder="Ketik nama malware atau kategori…" aria-controls="article-grid" />
         <p class="search-status" id="search-status" aria-live="polite">Pilih kategori atau cari dossier.</p>
       </section>
 
+      <div class="ornament" aria-hidden="true">✻</div>
+
       <main id="artikel">
-        <section class="article-grid" id="article-grid" aria-label="Daftar laporan">
-          <a class="article-card is-search-hidden" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/template.html?id=fritzfrog">
-            <div class="card-topline">
-              <span class="card-index">DOSSIER 001</span>
-              <span class="threat-badge threat-badge--critical">CRITICAL</span>
+        <section class="content-section" aria-labelledby="featured-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">* PILIHAN REDAKSI *</p>
+              <h2 class="section-title" id="featured-heading">Featured Article</h2>
             </div>
-            <p class="card-category">WORM &amp; BOTNET</p>
-            <h2>FritzFrog</h2>
-            <p class="card-description">Worm P2P yang bikin backdoor 'node' dan ngerusak sistem login root.</p>
-            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
-          </a>
+            <p class="section-note">DOSSIER 001 / WORM &amp; BOTNET</p>
+          </div>
 
-          <a class="article-card is-search-hidden" data-category="CRYPTOMINER" id="xmrig" href="artikel/template.html?id=xmrig">
-            <div class="card-topline">
-              <span class="card-index">DOSSIER 002</span>
-              <span class="threat-badge threat-badge--high">HIGH</span>
+          <div class="newspaper-grid" id="article-grid" aria-label="Daftar laporan">
+            <article class="headline-card">
+              <a class="article-card featured-article" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/template.html?id=fritzfrog">
+                <figure class="featured-visual">
+                  <img src="assets/img/server.jpg" alt="Ilustrasi sistem server untuk laporan FritzFrog" />
+                  <figcaption>FIG. 01 — Ilustrasi infrastruktur server</figcaption>
+                </figure>
+                <div class="featured-copy">
+                  <div class="card-topline">
+                    <span class="card-index">DOSSIER 001</span>
+                    <span class="threat-badge">CRITICAL</span>
+                  </div>
+                  <p class="card-category">WORM &amp; BOTNET</p>
+                  <h2>FritzFrog</h2>
+                  <p class="card-description">Worm P2P yang bikin backdoor 'node' dan ngerusak sistem login root.</p>
+                  <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+                </div>
+              </a>
+            </article>
+
+            <div class="side-articles">
+              <a class="article-card" data-category="CRYPTOMINER" id="xmrig" href="artikel/template.html?id=xmrig">
+                <div class="card-topline">
+                  <span class="card-index">DOSSIER 002</span>
+                  <span class="threat-badge">HIGH</span>
+                </div>
+                <p class="card-category">CRYPTOMINER</p>
+                <h2>XMRig &amp; Mirai</h2>
+                <p class="card-description">Nyedot CPU buat nambang kripto haram dan ngubah PC jadi zombie DDoS.</p>
+                <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+              </a>
+
+              <a class="article-card" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/template.html?id=prometei">
+                <div class="card-topline">
+                  <span class="card-index">DOSSIER 003</span>
+                  <span class="threat-badge">CRITICAL</span>
+                </div>
+                <p class="card-category">APT &amp; BACKDOOR</p>
+                <h2>Prometei</h2>
+                <p class="card-description">Nyuri kredensial (password) dan bertahan hidup lewat jaringan Tor.</p>
+                <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+              </a>
+
+              <div id="daftar-berita" class="grid-container" aria-live="polite"></div>
             </div>
-            <p class="card-category">CRYPTOMINER</p>
-            <h2>XMRig &amp; Mirai</h2>
-            <p class="card-description">Nyedot CPU buat nambang kripto haram dan ngubah PC jadi zombie DDoS.</p>
-            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
-          </a>
-
-          <a class="article-card is-search-hidden" data-category="APT &amp; BACKDOOR" id="prometei" href="artikel/template.html?id=prometei">
-            <div class="card-topline">
-              <span class="card-index">DOSSIER 003</span>
-              <span class="threat-badge threat-badge--critical">CRITICAL</span>
-            </div>
-            <p class="card-category">APT &amp; BACKDOOR</p>
-            <h2>Prometei</h2>
-            <p class="card-description">Nyuri kredensial (password) dan bertahan hidup lewat jaringan Tor.</p>
-            <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
-          </a>
-
-          <div id="daftar-berita" class="grid-container" aria-live="polite"></div>
+          </div>
         </section>
       </main>
 <footer class="site-footer">
@@ -104,7 +131,7 @@
         });
       }
     </script>
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
     <!-- Widget Turnstile Placeholder -->
     <div class="cf-turnstile" data-sitekey="SITE_KEY_ANDA_DI_SINI" data-callback="onTurnstileSuccess" style="display: none;"></div>
 
