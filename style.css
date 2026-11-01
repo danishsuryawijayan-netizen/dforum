@@ -709,23 +709,31 @@ figure figcaption {
   line-height: 1.85;
 }
 
-.newspaper-layout h2 {
+.newspaper-layout h2,
+#md-content h2,
+.newspaper-layout h3,
+#md-content h3 {
   position: relative;
-  margin: 25px 0 10px;
-  padding-top: 15px;
-  border-top: 1px solid var(--ink);
-  color: var(--ink);
-  font-family: "ChuckNoon", serif;
-  font-size: 1.5rem;
-  font-weight: 700;
+  display: block !important;
+  margin-top: 30px !important;
+  margin-bottom: 15px !important;
+  padding-top: 15px !important;
+  border-top: 2px solid var(--ink) !important;
+  color: var(--ink) !important;
+  font-family: "ChuckNoon", serif !important;
+  font-size: 1.8rem !important;
+  font-weight: bold !important;
   line-height: 1.15;
   break-after: avoid;
 }
 
-.newspaper-layout h2::before {
-  content: "* ";
-  font-family: var(--body-font);
-  font-size: 0.8em;
+.newspaper-layout h2::before,
+#md-content h2::before,
+.newspaper-layout h3::before,
+#md-content h3::before {
+  content: "* " !important;
+  color: var(--ink) !important;
+  font-family: "ChuckNoon", serif !important;
 }
 
 .newspaper-layout ul,
@@ -993,8 +1001,11 @@ figure figcaption {
     line-height: 1.75;
   }
 
-  .newspaper-layout h2 {
-    font-size: 1.35rem;
+  .newspaper-layout h2,
+  #md-content h2,
+  .newspaper-layout h3,
+  #md-content h3 {
+    font-size: 1.5rem !important;
   }
 
   .drop-cap::first-letter {
