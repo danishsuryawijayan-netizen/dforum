@@ -120,13 +120,25 @@ export default async function handler(req, res) {
     <p>GitHub authorization complete. This window can be closed.</p>
     <script nonce="${nonce}">
       const access_token = ${accessTokenLiteral};
-      if (window.opener) {
-        window.opener.postMessage(
-          'authorization:github:success:' + JSON.stringify({token: access_token, provider: 'github'}),
-          ${targetOriginLiteral}
-        );
+
+      try {
+        if (window.opener) {
+          const message = 'authorization:github:success:' + JSON.stringify({token: access_token, provider: 'github'});
+          window.opener.postMessage(message, ${targetOriginLiteral});
+
+          // Tampilkan pesan sukses sementara sebelum ditutup
+          document.body.innerHTML = "<h3 style='color:green;'>Login Berhasil! Menutup jendela...</h3>";
+
+          // Tunda penutupan selama 1.5 detik agar window utama sempat memproses token
+          setTimeout(() => {
+            self.close();
+          }, 1500);
+        } else {
+          document.body.innerHTML = "<h3 style='color:red;'>Error: window.opener null. Browser memblokir komunikasi.</h3>";
+        }
+      } catch (err) {
+        document.body.innerHTML = "<h3 style='color:red;'>Error: " + err.message + "</h3>";
       }
-      self.close();
     </script>
   </body>
 </html>`;
