@@ -2,46 +2,13 @@
 <html lang="id">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>DFORUM — Content Manager</title>
     <style>
-      /* Paksa html dan body full screen */
-      html, body {
-        height: 100% !important;
-        min-height: 100vh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-y: auto !important; /* Biar bisa discroll */
-        background-color: #f0f0f0 !important;
-      }
-
-      /* Targetkan ID root bawaan Decap/React */
-      #root {
-        height: 100vh !important;
-        min-height: 100vh !important;
-        display: flex !important;
-        flex-direction: column !important;
-      }
-
-      /* Paksa semua div di dalam root biar nge-full */
-      #root > div {
-        flex-grow: 1 !important;
-        min-height: 100% !important;
-      }
-
-      /* Khusus Mobile */
-      @media screen and (max-width: 768px) {
-        /* Sembunyikan scrollbar bawaan browser agar bersih */
-        ::-webkit-scrollbar {
-          display: none;
-        }
-
-        /* Paksa container form biar lebih lebar dan penuh */
-        [data-testid="cms-editor"], .css-1v0mbdj, .cms-content {
-          min-height: 100vh !important;
-          height: auto !important;
-        }
-      }
+      html, body { margin: 0; padding: 0; }
+      #nc-root { min-height: 100dvh; }
+      /* hilangkan lebar minimum kontainer utama Decap */
+      [class*="AppMainContainer"] { min-width: 0 !important; max-width: 100% !important; }
     </style>
   </head>
   <body>
@@ -51,7 +18,7 @@
     </script>
 
     <!-- Load Decap CMS script -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.1.9/dist/decap-cms.js"></script>
 
     <script>
       // Jalankan CMS dengan konfigurasi langsung di dalam halaman.
@@ -75,6 +42,7 @@
               create: true,
               extension: "md",
               slug: "{{slug}}",
+              editor: { preview: false },
               fields: [
                 { label: "Judul", name: "title", widget: "string" },
                 { label: "Tanggal", name: "date", widget: "datetime" },
@@ -90,6 +58,7 @@
               create: true,
               extension: "md",
               slug: "{{slug}}",
+              editor: { preview: false },
               fields: [
                 { label: "Judul", name: "title", widget: "string" },
                 { label: "Tanggal", name: "date", widget: "datetime" },
