@@ -201,7 +201,7 @@ function filterArticleCards() {
   const query = articleSearch?.value.trim().toLocaleLowerCase("id-ID") || "";
   const selectedFilter = activeCategoryFilter?.toLocaleUpperCase("id-ID") || "";
   const hasSelection = Boolean(query || activeCategoryFilter);
-  const articleCards = Array.from(articleGrid.querySelectorAll(".article-card, .card-berita"));
+  const articleCards = Array.from(articleGrid.querySelectorAll(".headline-link, .article-card, .card-berita"));
   let visibleCount = 0;
 
   articleCards.forEach((card) => {

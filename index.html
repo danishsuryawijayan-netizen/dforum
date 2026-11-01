@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="preload" href="assets/font/chuck_noon/Chuck%20Noon.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="assets/font/AA_typewriter.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="style.css?v=21" />
+    <link rel="stylesheet" href="style.css?v=23" />
   </head>
   <body class="home-page">
     <div class="page-shell">
@@ -58,21 +58,17 @@
         <section class="content-section" aria-label="Daftar laporan">
           <div class="newspaper-grid" id="article-grid" aria-label="Daftar laporan">
             <article class="headline-card">
-              <a class="article-card featured-article" data-category="WORM &amp; BOTNET" id="fritzfrog" href="artikel/template.html?id=fritzfrog">
-                <figure class="featured-visual">
-                  <img src="assets/img/server.jpg" alt="Ilustrasi sistem server untuk laporan FritzFrog" />
-                  <figcaption>FIG. 01 — Ilustrasi infrastruktur server</figcaption>
-                </figure>
-                <div class="featured-copy">
-                  <div class="card-topline">
-                    <span class="card-index">DOSSIER 001</span>
-                    <span class="threat-badge">CRITICAL</span>
+              <a href="artikel/template.html?id=fritzfrog" class="headline-link" id="fritzfrog" data-category="WORM &amp; BOTNET">
+                <div class="headline-content">
+                  <div class="headline-meta">
+                    <span class="dossier-number">DOSSIER 001</span>
+                    <span class="badge-stamp">CRITICAL</span>
                   </div>
-                  <p class="card-category">WORM &amp; BOTNET</p>
-                  <h2>FritzFrog</h2>
-                  <p class="card-date">Rilis: 28 Okt 2026</p>
-                  <p class="card-description">Worm P2P yang menciptakan backdoor bernama “node” dan merusak mekanisme autentikasi root.</p>
-                  <span class="card-action">BUKA DOSSIER <span aria-hidden="true">→</span></span>
+                  <p class="headline-category">WORM &amp; BOTNET</p>
+                  <h2 class="headline-title">FritzFrog: Cacing Bersenjata Golang</h2>
+                  <p class="headline-date">Rilis: 28 Okt 2026</p>
+                  <p class="headline-desc">Worm P2P yang menciptakan backdoor bernama &quot;node&quot; dan merusak mekanisme autentikasi root.</p>
+                  <span class="read-more">BUKA DOSSIER &rarr;</span>
                 </div>
               </a>
             </article>
@@ -123,7 +119,7 @@
         });
       }
     </script>
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
     <!-- Widget Turnstile Placeholder -->
     <div class="cf-turnstile" data-sitekey="SITE_KEY_ANDA_DI_SINI" data-callback="onTurnstileSuccess" style="display: none;"></div>
 

@@ -263,18 +263,6 @@ a:focus-visible {
   margin: 0 0 72px;
 }
 
-.section-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 22px;
-  padding-bottom: 12px;
-  border-bottom: var(--rule);
-}
-
-.section-kicker,
-.section-note,
 .card-index,
 .card-category,
 .card-action,
@@ -285,27 +273,15 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.section-title {
-  margin: 4px 0 0;
-  font-family: var(--display-font);
-  font-size: clamp(2rem, 4vw, 3.25rem);
-  font-weight: 400;
-  line-height: 1.05;
-}
-
-.section-note {
-  text-align: right;
-}
-
 .newspaper-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: 2fr 1fr;
   gap: 30px;
   align-items: start;
 }
 
 .newspaper-grid.is-filtered {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 1fr;
 }
 
 .side-articles[hidden] {
@@ -326,10 +302,11 @@ a:focus-visible {
 
 .headline-card {
   min-width: 0;
-  padding: 20px 0;
+  padding: 0;
   margin-bottom: 20px;
-  border-top: 2px solid var(--ink);
+  border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
+  background: transparent;
 }
 
 .headline-card:has(.is-search-hidden) {
@@ -350,19 +327,83 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
-.featured-article {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 20px;
-  min-height: 0;
-  padding: 0;
-  margin-bottom: 0;
-  border: 0;
+.headline-link {
+  display: block;
+  color: var(--ink);
+  text-decoration: none;
 }
 
-.headline-card .featured-article h2 {
-  font-size: clamp(3rem, 5.5vw, 5rem);
+.headline-link:hover,
+.headline-link:focus-visible {
+  outline: 1px solid var(--terracotta);
+  outline-offset: 4px;
+}
+
+.headline-content {
+  padding: 24px;
+}
+
+.headline-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.dossier-number,
+.headline-category,
+.read-more {
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.badge-stamp {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 2px solid var(--brick);
+  background: transparent;
+  color: var(--brick);
+  font-size: 0.65rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  transform: rotate(-3deg);
+}
+
+.headline-category {
+  margin: 0 0 8px;
+}
+
+.headline-title {
+  margin: 8px 0 15px;
+  color: var(--ink);
+  font-family: "ChuckNoon", serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.headline-date {
+  margin: 0 0 15px;
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.headline-desc {
+  margin: 0 0 20px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.read-more {
+  display: inline-block;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .side-articles {
@@ -385,32 +426,11 @@ a:focus-visible {
   margin-bottom: 0;
 }
 
-.featured-visual {
-  min-width: 0;
-  margin: 0;
-}
-
-.featured-visual img {
-  display: block;
-  width: 100%;
-  height: clamp(220px, 32vw, 350px);
-  max-height: 350px;
-  border: var(--rule);
-  object-fit: cover;
-}
-
 figure figcaption {
   margin-top: 7px;
   color: var(--ink);
   font-size: 0.72rem;
   line-height: 1.45;
-}
-
-.featured-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .card-topline {
@@ -453,10 +473,6 @@ figure figcaption {
   font-weight: 400;
   line-height: 1.08;
   overflow-wrap: anywhere;
-}
-
-.featured-article h2 {
-  font-size: clamp(3rem, 5.5vw, 5.5rem);
 }
 
 .card-description,
@@ -858,11 +874,7 @@ figure figcaption {
   }
 
   .newspaper-grid {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  }
-
-  .featured-article {
-    gap: 18px;
+    grid-template-columns: 2fr 1fr;
   }
 
   .article-layout,
@@ -918,18 +930,8 @@ figure figcaption {
     grid-column: 1;
   }
 
-  .section-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .section-note {
-    text-align: left;
-  }
-
   .newspaper-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: 24px;
   }
 
@@ -937,20 +939,12 @@ figure figcaption {
     gap: 16px;
   }
 
-  .headline-card {
-    padding: 18px 0;
+  .headline-content {
+    padding: 20px 16px;
   }
 
-  .featured-article {
-    padding: 0;
-  }
-
-  .featured-visual img {
-    height: clamp(220px, 62vw, 340px);
-  }
-
-  .featured-article h2 {
-    font-size: clamp(2.7rem, 13vw, 4rem);
+  .headline-title {
+    font-size: clamp(2.25rem, 10vw, 3.2rem);
   }
 
   .article-card {
