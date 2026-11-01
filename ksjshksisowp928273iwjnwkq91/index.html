@@ -4,6 +4,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DFORUM — Content Manager</title>
+    <style>
+      /* Paksa body dan html memenuhi tinggi layar */
+      html, body {
+        height: 100vh !important;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Mencegah scroll ganda */
+      }
+
+      /* Targetkan container utama Decap CMS (biasanya pakai id root atau class) */
+      #root, .css-1v0mbdj, [data-testid="cms-root"] {
+        height: 100vh !important;
+      }
+
+      /* Khusus tampilan Mobile (di bawah 768px) */
+      @media screen and (max-width: 768px) {
+        /* Paksa semua container jadi full screen */
+        #root > div, .cms-root, iframe {
+          min-height: 100vh !important;
+          height: 100vh !important;
+          width: 100vw !important;
+          border: none !important;
+        }
+
+        /* Sembunyikan scrollbar bawaan browser agar bersih */
+        ::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <script>
