@@ -5,7 +5,7 @@ date: 2026-10-31T11:52:00.000+07:00
 category: BERITA
 source: The Hacker News
 source_url: https://thehackernews.com/2026/10/chainalysis-confirms-instusion-into.html
-gambar: gambar1.jpg
+gambar: /assets/img/server.jpg
 ---
 JAKARTA, DFORUM — Perusahaan analisis blockchain asal Amerika Serikat, Chainalysis, resmi mengonfirmasi bahwa pihaknya telah menjadi target insiden keamanan siber. Pihak luar berhasil mengakses data pelanggan yang dikategorikan tidak sensitif dengan menggunakan teknik "offensive agentic" berbasis kecerdasan buatan (AI).
 

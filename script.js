@@ -34,6 +34,7 @@ if (blockedBotDetected) {
 
 const themeStorageKey = "dforum-theme";
 const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const backToTopButton = document.querySelector("[data-back-to-top]");
 
 function readSavedTheme() {
@@ -55,6 +56,7 @@ function saveTheme(theme) {
 function applyTheme(theme) {
   const isDark = theme === "dark";
   document.body.classList.toggle("dark-mode", isDark);
+  themeColorMeta?.setAttribute("content", isDark ? "#1C1C1C" : "#F3E9D2");
 
   if (themeToggle) {
     const label = isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap";
