@@ -66,27 +66,7 @@
         width: 100% !important;
       }
 
-      /* Khusus tampilan HP */
-      @media screen and (max-width: 768px) {
-        /* Targetkan container header/topbar editor agar tidak sticky */
-        header,
-        [class*="TopBar"],
-        [class*="AppHeader"],
-        [class*="EditorHeader"],
-        [class*="ToolbarContainer"] {
-          position: relative !important; /* Ubah dari sticky/fixed jadi relative */
-          top: auto !important;
-          z-index: 1 !important;
-          background-color: #f4f4f4 !important; /* Samakan dengan background agar menyatu */
-          border-bottom: 1px solid #ccc !important;
-        }
-
-        /* Pastikan container utama editor bisa di-scroll dengan normal */
-        [class*="EditorContainer"] {
-          padding-top: 0 !important;
-          overflow-y: visible !important;
-        }
-      }
+      [data-bar-parent] { padding-top: var(--bar-h, 66px) !important; }
     </style>
   </head>
   <body>
@@ -97,6 +77,33 @@
 
     <!-- Load Decap CMS script -->
     <script src="https://unpkg.com/decap-cms@3.1.9/dist/decap-cms.js"></script>
+
+    <script>
+      (function () {
+        function findToolbar(root) {
+          var btn = [].slice.call(root.querySelectorAll('button'))
+            .filter(function (b) { return /publish/i.test(b.textContent); })[0];
+          for (var el = btn; el && el !== root; el = el.parentElement) {
+            var cs = getComputedStyle(el), r = el.getBoundingClientRect();
+            if (['fixed', 'sticky', 'absolute'].indexOf(cs.position) > -1 &&
+                r.top <= 2 && r.width >= innerWidth * 0.9) return el;
+          }
+        }
+        function sync() {
+          var root = document.getElementById('nc-root');
+          if (!root) return;
+          var bar = findToolbar(root);
+          if (!bar) return;
+          bar.setAttribute('data-bar', '1');
+          bar.parentElement.setAttribute('data-bar-parent', '1');
+          document.documentElement.style
+            .setProperty('--bar-h', bar.getBoundingClientRect().height + 'px');
+        }
+        new MutationObserver(function () { requestAnimationFrame(sync); })
+          .observe(document.body, { childList: true, subtree: true });
+        addEventListener('resize', sync);
+      })();
+    </script>
 
     <script>
       // Jalankan CMS dengan konfigurasi langsung di dalam halaman.
@@ -150,33 +157,6 @@
           ]
         }
       });
-
-      // Fungsi untuk menonaktifkan sticky header di mobile
-      function disableStickyHeader() {
-        if (window.innerWidth <= 768) {
-          // Cari semua elemen div atau header
-          const elements = document.querySelectorAll('div, header, section');
-
-          elements.forEach(el => {
-            const style = window.getComputedStyle(el);
-            // Cek apakah elemen ini posisinya sticky atau fixed
-            if (style.position === 'sticky' || style.position === 'fixed') {
-              // Cek apakah di dalamnya ada tombol Publish atau Delete
-              if (el.textContent.includes('Publish') || el.textContent.includes('Delete entry')) {
-                el.style.setProperty('position', 'relative', 'important');
-                el.style.setProperty('top', 'auto', 'important');
-                el.style.setProperty('z-index', '1', 'important');
-              }
-            }
-          });
-        }
-      }
-
-      // Jalankan setelah CMS selesai memuat (beri jeda 2 detik)
-      setTimeout(disableStickyHeader, 2000);
-
-      // Jalankan juga setiap kali layar di-resize
-      window.addEventListener('resize', disableStickyHeader);
     </script>
   </body>
 </html>
