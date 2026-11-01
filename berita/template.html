@@ -166,7 +166,7 @@
         renderImage(frontmatter);
         contentElement.innerHTML = window.marked.parse(match[2]);
         const firstParagraph = contentElement.querySelector("p");
-        if (firstParagraph) firstParagraph.classList.add("drop-cap");
+        if (firstParagraph) firstParagraph.classList.add("drop-cap", "article-lead");
         renderSource(frontmatter);
       }
 
