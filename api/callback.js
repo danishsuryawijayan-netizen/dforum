@@ -122,7 +122,7 @@ export default async function handler(req, res) {
       const access_token = ${accessTokenLiteral};
       if (window.opener) {
         window.opener.postMessage(
-          'authorization:github:success:' + JSON.stringify({token: access_token}),
+          'authorization:github:success:' + JSON.stringify({token: access_token, provider: 'github'}),
           ${targetOriginLiteral}
         );
       }
