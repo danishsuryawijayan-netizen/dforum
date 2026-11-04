@@ -13,6 +13,7 @@
   <link rel="preload" href="../assets/font/AA_typewriter.ttf" as="font" type="font/ttf" crossorigin />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.17/purify.min.js" integrity="sha512-2wT0W6vojz3cJuLoa/DxrPVQRinkfRjFWMWIDK4NghTqObEhpem1nEkeK0d9ZE+/hyvfMNuJZlfxM4LsRgeoSA==" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../style.css?v=27" />
 </head>
 <body>
@@ -143,6 +144,80 @@
         sourceElement.append(paragraph);
       }
 
+      let markdownSanitizerHookAdded = false;
+
+      function isAllowedArticleImagePath(value) {
+        if (!value.startsWith("/assets/img/") || value.startsWith("//") || /[\\\\?#\u0000-\u0020]/.test(value)) {
+          return false;
+        }
+
+        try {
+          const decodedPath = decodeURIComponent(value);
+          if (/[\\\\\u0000-\u001f]/.test(decodedPath) || decodedPath.split("/").some((part) => part === "." || part === "..")) {
+            return false;
+          }
+
+          const imageUrl = new URL(value, window.location.origin);
+          return imageUrl.origin === window.location.origin && imageUrl.pathname.startsWith("/assets/img/") && !imageUrl.search && !imageUrl.hash;
+        } catch {
+          return false;
+        }
+      }
+
+      function addMarkdownSanitizerHook() {
+        if (markdownSanitizerHookAdded) return;
+
+        window.DOMPurify.addHook("uponSanitizeAttribute", (element, attribute) => {
+          const tagName = element.nodeName.toLowerCase();
+          const attributeName = attribute.attrName.toLowerCase();
+          const value = attribute.attrValue.trim();
+          const tagAttributes = tagName === "a"
+            ? ["href"]
+            : tagName === "img"
+              ? ["src", "alt", "width", "style"]
+              : [];
+
+          if (!tagAttributes.includes(attributeName)) {
+            attribute.keepAttr = false;
+            return;
+          }
+
+          if (tagName === "a" && attributeName === "href") {
+            try {
+              const linkUrl = new URL(value);
+              attribute.keepAttr = /^https?:\/\//i.test(value) && (linkUrl.protocol === "http:" || linkUrl.protocol === "https:");
+            } catch {
+              attribute.keepAttr = false;
+            }
+          } else if (tagName === "img" && attributeName === "src") {
+            attribute.keepAttr = isAllowedArticleImagePath(value);
+          } else if (tagName === "img" && attributeName === "width") {
+            attribute.keepAttr = /^(?:[1-9]|[1-9]\d|100)%$/.test(value);
+          } else if (tagName === "img" && attributeName === "style") {
+            attribute.keepAttr = /^float:(?:left|right|none)$/.test(value);
+          }
+        });
+
+        markdownSanitizerHookAdded = true;
+      }
+
+      function sanitizeMarkdownHtml(dirtyHtml) {
+        if (!window.DOMPurify || typeof window.DOMPurify.sanitize !== "function") {
+          throw new Error("Library sanitasi konten gagal dimuat.");
+        }
+
+        addMarkdownSanitizerHook();
+        return window.DOMPurify.sanitize(dirtyHtml, {
+          ALLOWED_TAGS: ["p", "h2", "h3", "strong", "em", "ul", "ol", "li", "a", "img", "br"],
+          ALLOWED_ATTR: ["href", "src", "alt", "width", "style"],
+          ALLOWED_URI_REGEXP: /^(?:(?:https?:\/\/)|\/assets\/img\/)/i,
+          ALLOW_ARIA_ATTR: false,
+          ALLOW_DATA_ATTR: false,
+          FORBID_TAGS: ["script", "iframe", "style"],
+          FORBID_CONTENTS: ["script", "iframe", "style"]
+        });
+      }
+
       function renderMarkdown(rawMarkdown) {
         if (!window.marked || typeof window.marked.parse !== "function" || !window.jsyaml || typeof window.jsyaml.load !== "function") {
           throw new Error("Library Markdown atau YAML gagal dimuat.");
@@ -165,7 +240,7 @@
         kickerElement.textContent = category === "BERITA" ? "BERITA SIBER" : category;
         metaElement.textContent = "Oleh: Redaksi DForum | Tanggal: " + date + " | Kategori: " + category;
         renderImage(frontmatter);
-        contentElement.innerHTML = window.marked.parse(match[2]);
+        contentElement.innerHTML = sanitizeMarkdownHtml(window.marked.parse(match[2]));
         const firstParagraph = contentElement.querySelector("p");
         if (firstParagraph) firstParagraph.classList.add("drop-cap", "article-lead");
         renderSource(frontmatter);

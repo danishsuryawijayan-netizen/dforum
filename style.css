@@ -703,6 +703,32 @@ figure figcaption {
   margin-bottom: 1.25rem;
 }
 
+.newspaper-layout img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  margin: 0.5rem auto 1rem;
+  border: var(--rule);
+}
+
+.newspaper-layout img[style="float:left"] {
+  float: left;
+  max-width: 40%;
+  margin: 0.25rem 1.25rem 1rem 0;
+}
+
+.newspaper-layout img[style="float:right"] {
+  float: right;
+  max-width: 40%;
+  margin: 0.25rem 0 1rem 1.25rem;
+}
+
+.newspaper-layout img[style="float:none"] {
+  float: none;
+  max-width: 40%;
+  margin: 1rem auto;
+}
+
 .newspaper-layout p,
 .newspaper-layout li {
   font-family: var(--body-font);
@@ -1037,5 +1063,18 @@ figure figcaption {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .newspaper-layout img,
+  .newspaper-layout img[style="float:left"],
+  .newspaper-layout img[style="float:right"],
+  .newspaper-layout img[style="float:none"] {
+    display: block;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 1rem auto !important;
   }
 }
