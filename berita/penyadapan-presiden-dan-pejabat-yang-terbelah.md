@@ -23,3 +23,7 @@ Dalam keadaan seperti itu, pejabat menghadapi dua orientasi kekuasaan. Secara ad
 
 ![https://pin.it/4VaXQv1nj](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-o04g.webp)
 
+
+
+![penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-moee](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-moee.webp)
+
