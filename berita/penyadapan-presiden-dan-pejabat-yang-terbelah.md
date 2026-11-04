@@ -21,9 +21,5 @@ Situasi menjadi sangat membahayakan ketika pejabat lebih takut mengecewakan mant
 Dalam keadaan seperti itu, pejabat menghadapi dua orientasi kekuasaan. Secara administratif, mereka berada di bawah pemimpin yang sedang menjabat. Namun, secara politik, mereka mungkin masih merasa memiliki utang loyalitas kepada pemimpin sebelumnya.
 
 
-![https://pin.it/4VaXQv1nj](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-o04g.webp)
-
-
-
-![penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-moee](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-moee.webp)
+![Ilustrasi artikel](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-dcb9.webp)
 
