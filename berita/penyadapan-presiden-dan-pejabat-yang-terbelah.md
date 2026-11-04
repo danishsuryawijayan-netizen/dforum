@@ -19,3 +19,7 @@ Presiden yang sedang menjabat adalah pemegang mandat pemerintahan yang berwenang
 Situasi menjadi sangat membahayakan ketika pejabat lebih takut mengecewakan mantan pemimpinnya daripada melanggar arahan pemimpin yang sedang menjabat, atau ketika keputusan pemerintahan disusun untuk menjaga kepentingan jaringan lama. Hal serupa terjadi ketika otoritas formal presiden baru terus-menerus dibatasi oleh pusat pengaruh yang tidak memiliki mandat konstitusional.
 
 Dalam keadaan seperti itu, pejabat menghadapi dua orientasi kekuasaan. Secara administratif, mereka berada di bawah pemimpin yang sedang menjabat. Namun, secara politik, mereka mungkin masih merasa memiliki utang loyalitas kepada pemimpin sebelumnya.
+
+
+![https://pin.it/4VaXQv1nj](/assets/img/penyadapan-presiden-dan-pejabat-yang-terbelah-2026-11-04-o04g.webp)
+
