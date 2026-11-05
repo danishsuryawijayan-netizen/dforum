@@ -9,9 +9,6 @@
     <title>DFORUM — Laporan Keamanan Siber</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-    <!-- Cloudflare Turnstile Placeholder -->
-    <!-- Nanti jika sudah punya Site Key, buka komentar script di bawah ini -->
-    <!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
     <meta name="google-site-verification" content="ZjZ8lPPSImnZbILf-GXH8DastswRt1AA1orF4WH18lg" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
@@ -121,16 +118,5 @@
       }
     </script>
     <script src="script.js?v=9"></script>
-    <!-- Widget Turnstile Placeholder -->
-    <div class="cf-turnstile" data-sitekey="SITE_KEY_ANDA_DI_SINI" data-callback="onTurnstileSuccess" style="display: none;"></div>
-
-    <!-- Script Placeholder Callback -->
-    <script>
-      // Fungsi ini akan dipanggil jika user berhasil lolos verifikasi Cloudflare
-      function onTurnstileSuccess(token) {
-        console.log("Turnstile verification passed. Token:", token);
-        // Logika untuk membuka form atau fitur tertentu bisa ditaruh di sini
-      }
-    </script>
   </body>
 </html>
