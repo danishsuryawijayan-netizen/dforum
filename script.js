@@ -1,37 +1,5 @@
 "use strict";
 
-const blockedBotKeywords = [
-  "python",
-  "curl",
-  "wget",
-  "bot",
-  "spider",
-  "crawler",
-  "headlesschrome",
-  "selenium",
-  "puppeteer",
-  "postman",
-];
-const userAgent = navigator.userAgent.toLowerCase();
-let blockedBotDetected = false;
-
-for (const keyword of blockedBotKeywords) {
-  if (userAgent.includes(keyword)) {
-    blockedBotDetected = true;
-    break;
-  }
-}
-
-if (blockedBotDetected) {
-  document.body.innerHTML = `
-    <div style="background-color: #111; color: #ff0000; font-family: monospace; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-      <h1 style="font-size: 4rem; margin-bottom: 10px;">403 FORBIDDEN</h1>
-      <p style="font-size: 1.2rem; color: #fff;">Sistem mendeteksi aktivitas bot otomatis.</p>
-      <p style="font-size: 1rem; color: #888;">Akses ditolak. IP dan User-Agent Anda telah dicatat.</p>
-    </div>`;
-  throw new Error("Automated user-agent blocked");
-}
-
 const themeStorageKey = "dforum-theme";
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
